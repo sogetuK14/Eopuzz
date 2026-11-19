@@ -294,23 +294,6 @@ body::before {
 .status strong { font-weight: 700; }
 .progress { height: 3px; background: transparent; border-top: 1px solid var(--line); margin-top: 6px; }
 .progress-fill { height: 3px; background: var(--mark); transition: width 200ms ease; }
-.banner {
-  margin-top: 16px;
-  border-top: 3px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  padding: 14px 2px 12px;
-}
-.banner .banner-head {
-  font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
-  font-weight: 600;
-  font-size: 22px;
-  margin: 0 0 4px;
-}
-.banner .banner-body {
-  font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
-  font-size: 16px;
-  margin: 0;
-}
 .meta {
   margin-top: 22px;
   border-top: 3px solid var(--line);
@@ -501,14 +484,10 @@ body::before {
             <div class="progress-fill" id="progress-fill"></div>
           </div>
 
-          <div class="banner" id="banner" style="display: none">
-            <p class="banner-head" id="banner-head"></p>
-            <p class="banner-body" id="banner-body"></p>
-          </div>
 
-          <section class="meta" aria-label="テーマの答え">
+          <section class="meta" aria-label="答え">
             <h2 class="meta-head">
-              テーマの答え
+              答え
             </h2>
             <div class="meta-slots" id="meta-slots" aria-label="拾った文字"></div>
             <form class="meta-form" id="meta-form">
@@ -532,9 +511,9 @@ body::before {
               </p>
             </form>
             <div class="meta-solved" id="meta-solved" role="status" style="display: none">
-              <p class="meta-solved-head">テーマの答え、正解です！</p>
+              <p class="meta-solved-head">正解！</p>
               <p class="meta-solved-body">
-                答えは「<span id="meta-answer-echo"></span>」でした。盤面の完成とは別に、テーマの答えを解き切りました。
+                答えは「<span id="meta-answer-echo"></span>」でした！
               </p>
             </div>
           </section>
@@ -663,15 +642,6 @@ function fillMsg() {
 function setStatus(html) {
   document.getElementById("status").innerHTML = html;
 }
-function showBanner() {
-  document.getElementById("banner-head").textContent = "全問正解！";
-  document.getElementById("banner-body").textContent = "おめでとう！";
-  document.getElementById("banner").style.display = "block";
-}
-function hideBanner() {
-  document.getElementById("banner").style.display = "none";
-}
-
 /* ----- painting ----- */
 var cellEls = [], inputs = [], acrossRows = [], downRows = [], metaSlotChars = [];
 
@@ -814,7 +784,6 @@ function applyInput(idx, raw, advance) {
     if (raw === "" && values[idx] !== "" && !locked[idx]) {
       values[idx] = "";
       if (wrongSet[idx]) delete wrongSet[idx];
-      hideBanner();
       repaint();
       setStatus(fillMsg());
     } else {
@@ -837,13 +806,10 @@ function applyInput(idx, raw, advance) {
   }
   repaint();
   if (isComplete()) {
-    showBanner();
     setStatus("完成しました。");
   } else if (countFilled() === total) {
-    hideBanner();
     setStatus("すべてのマスが埋まりましたが、間違っている文字があります。「チェック」で確認できます。");
   } else {
-    hideBanner();
     setStatus(fillMsg());
   }
   if (advance && w) {
@@ -858,7 +824,6 @@ function handleKeyDown(e, idx) {
     if (values[idx] !== "" && !locked[idx]) {
       values[idx] = "";
       if (wrongSet[idx]) delete wrongSet[idx];
-      hideBanner();
       repaint();
       setStatus(fillMsg());
     } else {
@@ -924,7 +889,7 @@ function handleKeyDown(e, idx) {
       var cw0 = cellWords[idx];
       var pw = cw0.A || cw0.D;
       var label = (Math.floor(idx / SIZE) + 1) + "行目、" + (idx % SIZE + 1) + "列目、カギ " + (pw ? pw.num : "");
-      if (metaOrder[idx] != null) label += "、テーマの答えの" + metaOrder[idx] + "文字目";
+      if (metaOrder[idx] != null) label += "、答えの" + metaOrder[idx] + "文字目";
       input.setAttribute("aria-label", label);
       input.addEventListener("input", function (e) {
         if (e.isComposing) {
@@ -1025,10 +990,8 @@ document.getElementById("btn-check").addEventListener("click", function () {
   }
   repaint();
   if (wrongN === 0 && empty === 0) {
-    showBanner();
     setStatus("完成しました。");
   } else {
-    hideBanner();
     setStatus("チェック：正解 " + correct + " ・ 不正解 " + wrongN + "（赤で表示） ・ 空き " + empty + "。正解のマスはロックされました。");
   }
 });
@@ -1044,7 +1007,6 @@ document.getElementById("btn-clear-yes").addEventListener("click", function () {
   wrongSet = {};
   editBuf = null;
   confirmRow.style.display = "none";
-  hideBanner();
   repaint();
   setStatus("グリッドをクリアしました。最初からどうぞ。");
   var first = across[0] || down[0];

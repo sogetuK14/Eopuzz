@@ -1,0 +1,1085 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="color-scheme" content="light" />
+    <link rel="icon" href="data:," />
+    <title>えおぱずNo.2 No.015</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="えおぱずNo.2 難易度☆☆☆" />
+    <meta property="og:description" content="前回より難易度上げました。4.0までの情報で作っています。" />
+    <meta property="og:image" content="https://sogetuk14.github.io/Eopuzz/Eopuzz2.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="えおぱずNo.2 難易度☆☆☆" />
+    <meta name="twitter:description" content="前回より難易度上げました。4.0までの情報で作っています。" />
+    <meta name="twitter:image" content="https://sogetuk14.github.io/Eopuzz/Eopuzz2.png" />
+    <meta name="description" content="前回より難易度上げました。4.0までの情報で作っています。" />
+    <style>
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --ink: #111111;
+  --ink-soft: #5c5c5c;
+  --line: #111111;
+  --cell-border: #111111;
+  --block: #111111;
+  --accent: #111111;
+  --accent-soft: #ffe27a;
+  --word-soft: #dfeaf5;
+  --mark: #c8102e;
+  --bad: #c8102e;
+  --bad-soft: rgba(200, 16, 46, 0.1);
+  --btn-bg: #111111;
+  --btn-ink: #ffffff;
+  --btn-ghost-border: #111111;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", "Noto Sans JP", "Helvetica Neue", Arial, sans-serif;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+}
+.serif {
+  font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, "Times New Roman", serif;
+}
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 680px) minmax(260px, 1fr);
+  gap: 36px;
+  align-items: start;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 20px 20px 8px;
+}
+@media (max-width: 820px) {
+  .layout { grid-template-columns: minmax(0, 1fr); padding: 14px 12px 8px; }
+}
+.masthead { border-top: 3px solid var(--line); position: relative; margin-top: 4px; }
+.masthead::before { content: ""; display: block; border-top: 1px solid var(--line); margin-top: 2px; }
+.masthead-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 20px;
+  flex-wrap: wrap;
+  padding: 8px 0 9px;
+}
+.masthead::after {
+  content: "";
+  display: block;
+  border-top: 1px solid var(--line);
+  border-bottom: 3px solid var(--line);
+  height: 2px;
+}
+.masthead-label {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.masthead-label .diamond {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--mark);
+  transform: rotate(45deg);
+  margin-right: 9px;
+  vertical-align: 1px;
+}
+.masthead-date {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+@media (max-width: 560px) {
+  .masthead-row { flex-direction: column; align-items: center; text-align: center; }
+}
+.standfirst {
+  font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 18px 0 16px;
+}
+#board {
+  container-type: size;
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  grid-template-rows: repeat(15, 1fr);
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  border: 2px solid var(--line);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  background: var(--surface);
+}
+.cell {
+  position: relative;
+  border-right: 1px solid var(--cell-border);
+  border-bottom: 1px solid var(--cell-border);
+  background: var(--surface);
+}
+.cell:nth-child(15n) { border-right: none; }
+.cell:nth-last-child(-n + 15) { border-bottom: none; }
+.cell.block { background: var(--block); }
+.cell.block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.cell.in-word { background: var(--word-soft); }
+.cell.active { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); z-index: 1; }
+.cell.wrong { background: var(--bad-soft); }
+.cell .num {
+  position: absolute;
+  top: 1px;
+  left: 2px;
+  font-size: min(2.1cqw, 11px);
+  font-weight: 600;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 2;
+}
+.cell input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: max(16px, 5.6cqw);
+  line-height: 1;
+  padding: 12% 0 0;
+  margin: 0;
+  color: var(--ink);
+  outline: none;
+  caret-color: var(--ink);
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.cell input.locked { font-weight: 700; }
+.cell input.wrong-letter { color: var(--bad); }
+.cell .meta-ring {
+  position: absolute;
+  inset: 13%;
+  border: 2px solid var(--mark);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+.cell .meta-order {
+  position: absolute;
+  right: 2px;
+  bottom: 1px;
+  font-size: min(2.1cqw, 11px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--mark);
+  pointer-events: none;
+  z-index: 2;
+}
+.current-clue {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-left: 4px solid var(--mark);
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  min-height: 42px;
+  font-family: inherit;
+}
+.current-clue .cc-num { font-weight: 700; font-size: 16px; }
+.current-clue .cc-dir {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mark);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.current-clue .cc-text {
+  font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.35;
+  flex: 1;
+}
+.current-clue .cc-len { color: var(--ink-soft); }
+.current-clue .cc-hint {
+  margin-left: auto;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  align-self: center;
+}
+@media (max-width: 560px) { .current-clue .cc-hint { display: none; } }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.toolbar button {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1.5px solid var(--btn-ghost-border);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: 0;
+}
+.toolbar button.primary { background: var(--btn-bg); color: var(--btn-ink); border-color: var(--btn-bg); }
+.toolbar button:active { transform: translateY(1px); }
+.confirm-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  font-size: 14px;
+}
+.confirm-row .cr-text {
+  font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  font-size: 15px;
+  flex: 1;
+  min-width: 180px;
+}
+.confirm-row button {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1.5px solid var(--btn-ghost-border);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: 0;
+}
+.confirm-row button.danger { background: var(--btn-bg); color: var(--btn-ink); border-color: var(--btn-bg); }
+.status { font-size: 13px; line-height: 1.5; margin: 14px 0 0; min-height: 20px; }
+.status strong { font-weight: 700; }
+.progress { height: 3px; background: transparent; border-top: 1px solid var(--line); margin-top: 6px; }
+.progress-fill { height: 3px; background: var(--mark); transition: width 200ms ease; }
+.meta {
+  margin-top: 22px;
+  border-top: 3px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 2px 14px;
+}
+.meta-head {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin: 0 0 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.meta-slots { display: flex; flex-wrap: wrap; gap: 6px; }
+.meta-slot {
+  position: relative;
+  width: 44px;
+  height: 48px;
+  border: 1.5px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+}
+.meta-slot-num {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--mark);
+  line-height: 1;
+}
+.meta-slot-char { font-size: 22px; font-weight: 700; line-height: 1; padding-top: 6px; }
+.meta-qmark { font-size: 22px; font-weight: 700; line-height: 1; align-self: center; }
+.meta-form { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.meta-label {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.meta-input {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  padding: 8px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 42px;
+  width: 200px;
+  max-width: 100%;
+}
+.meta-submit {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  min-height: 42px;
+  padding: 8px 16px;
+  border: 1.5px solid var(--btn-bg);
+  background: var(--btn-bg);
+  color: var(--btn-ink);
+  cursor: pointer;
+  border-radius: 0;
+}
+.meta-submit:active { transform: translateY(1px); }
+.meta-wrong { font-size: 14px; color: var(--bad); margin: 0; flex-basis: 100%; }
+.meta-solved {
+  margin-top: 12px;
+  border: 1.5px solid var(--line);
+  border-left: 4px solid var(--mark);
+  padding: 10px 12px;
+}
+.meta-solved-head {
+  font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  font-weight: 600;
+  font-size: 19px;
+  margin: 0 0 2px;
+}
+.meta-solved-body {
+  font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  font-size: 15px;
+  margin: 0;
+}
+.clue-col-head {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 7px 0 6px;
+  margin: 0 0 6px;
+}
+.clues-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+@media (max-width: 480px) { .clues-grid { grid-template-columns: 1fr; } }
+.clue-row { display: flex; align-items: flex-start; margin: 0 -8px; }
+.clue-row.sel { background: var(--word-soft); }
+.clue-btn {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 7px 8px;
+  margin: 0;
+  cursor: pointer;
+  font-family: inherit;
+  min-height: 42px;
+  align-items: baseline;
+  border-radius: 0;
+  color: var(--ink);
+}
+.clue-btn .cl-num { font-weight: 700; font-size: 14px; min-width: 22px; }
+.clue-btn .cl-text {
+  font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.45;
+}
+.clue-btn .cl-len { color: var(--ink-soft); }
+.clue-row.done .cl-text {
+  color: var(--ink-soft);
+  text-decoration: line-through;
+  text-decoration-color: var(--mark);
+  text-decoration-thickness: 1px;
+}
+.xw-footer {
+  max-width: 1180px;
+  margin: 26px auto 0;
+  padding: 12px 20px 30px;
+  border-top: 1px solid var(--line);
+  font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+@media (max-width: 820px) { .xw-footer { padding: 12px 12px 30px; } }
+.xw-copyright {
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+</style>
+  </head>
+  <body>
+    <div class="xw">
+      <div class="layout">
+        <div class="board-col">
+          <header class="masthead">
+            <div class="masthead-row">
+              <span class="masthead-label">
+                <span class="diamond" aria-hidden="true"></span>
+                えおぱずNo.2
+              </span>
+              <span class="masthead-date">難易度☆☆☆</span>
+            </div>
+          </header>
+
+          <p class="standfirst">前回より難易度上げました。4.0までの情報で作っています。</p>
+
+          <div id="board" role="grid" aria-label="クロスワードの盤面、15×15"></div>
+
+          <button type="button" class="current-clue" id="current-clue" aria-live="polite" aria-label="現在のカギ">
+            <span class="cc-num" id="cc-num"></span>
+            <span class="cc-dir" id="cc-dir"></span>
+            <span class="cc-text" id="cc-text"></span>
+            <span class="cc-hint">タップで切り替え</span>
+          </button>
+
+          <div class="toolbar">
+            <button type="button" class="primary" id="btn-check">チェック</button>
+            <button type="button" id="btn-clear">クリア</button>
+          </div>
+
+          <div class="confirm-row" id="confirm-row" style="display: none">
+            <span class="cr-text">グリッドをクリアしますか？入力した文字はすべて消えます。</span>
+            <button type="button" class="danger" id="btn-clear-yes">クリアする</button>
+            <button type="button" id="btn-clear-no">キャンセル</button>
+          </div>
+
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+          <div class="progress" aria-hidden="true">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+
+
+          <section class="meta" aria-label="答え">
+            <h2 class="meta-head">
+              答え
+            </h2>
+            <div class="meta-slots" id="meta-slots" aria-label="拾った文字"></div>
+            <form class="meta-form" id="meta-form">
+              <label class="meta-label" for="meta-input">答えを入力</label>
+              <input
+                id="meta-input"
+                class="meta-input"
+                type="text"
+                placeholder="カタカナで入力"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="none"
+                spellcheck="false"
+              />
+              <button type="submit" class="meta-submit">答える</button>
+              <p class="meta-wrong" id="meta-empty" role="status" style="display: none">
+                答えが入力されていません。カタカナで入力してください。
+              </p>
+              <p class="meta-wrong" id="meta-wrong" role="status" style="display: none">
+                ちがうみたい。もう一度どうぞ。
+              </p>
+            </form>
+            <div class="meta-solved" id="meta-solved" role="status" style="display: none">
+              <p class="meta-solved-head">正解！</p>
+              <p class="meta-solved-body">
+                答えは「<span id="meta-answer-echo"></span>」でした！
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <div class="clue-col">
+          <div class="clues-grid">
+            <section aria-label="ヨコのカギ">
+              <h2 class="clue-col-head">ヨコのカギ</h2>
+              <div id="clues-across"></div>
+            </section>
+            <section aria-label="タテのカギ">
+              <h2 class="clue-col-head">タテのカギ</h2>
+              <div id="clues-down"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+
+      <footer class="xw-footer">
+        <div class="xw-copyright">(C) SQUARE ENIX CO., LTD. All Rights Reserved.</div>
+      </footer>
+    </div>
+    <script>
+"use strict";
+var DATA = {"no":15,"title":"えおぱずNo.2","dateline":"難易度☆☆☆","standfirst":"前回より難易度上げました。4.0までの情報で作っています。","cardImageUrl":"https://sogetuk14.github.io/Eopuzz/Eopuzz2.png","footerCopyright":"(C) SQUARE ENIX CO., LTD. All Rights Reserved.","words":[{"w":"ゴールドソーサー","r":0,"c":8,"d":"D","clue":"熱気を集める遊技場。外部コラボにも力入れてます。"},{"w":"エオルゼア","r":2,"c":6,"d":"A","clue":"ここは神々に愛されし地●●●●●"},{"w":"サハギン","r":6,"c":8,"d":"A","clue":"卵は勲章。育児は名誉。母は絶対。父は偉大。"},{"w":"ミニオン","r":3,"c":11,"d":"D","clue":"足元ひょこひょこ。中には肩や頭にのるものも。"},{"w":"エリクサー","r":2,"c":6,"d":"D","clue":"これでHPMP全回復。でも勿体なくて使えない？"},{"w":"ラグナロク","r":4,"c":2,"d":"A","clue":"戦士のゾディアックウェポン最終形態。世界の終末・最終戦争。"},{"w":"オノコロ","r":5,"c":11,"d":"A","clue":"海賊衆の根城がある場所。天高く聳える謎の塔がある。"},{"w":"グリダニア","r":4,"c":3,"d":"D","clue":"「そうだ」じゃないよ「そうじゃ」だよ。"},{"w":"シロマドウシ","r":4,"c":14,"d":"D","clue":"第五星暦に栄えた町。別名●●●●の国。"},{"w":"ガルーダ","r":6,"c":0,"d":"A","clue":"「クソムシ共がぁ！！」"},{"w":"アンコクキシ","r":9,"c":9,"d":"A","clue":"己の信念に従い弱き者を護るために剣を振るう。ゆえに盾を掲げない。"},{"w":"ダークマター","r":7,"c":12,"d":"D","clue":"G1からG8まで。これがあれば修理できるぞ。"},{"w":"バルダム","r":5,"c":1,"d":"D","clue":"戦士の関所。第二関門苦手な人もいるかもね。"},{"w":"イフリート","r":12,"c":9,"d":"A","clue":"灼熱の檻での戦闘。FFシリーズで炎といえばやはり…。"}],"meta":{"answer":"バイルブランドトウ","question":"リムサロミンサガアルシマハ？","cells":[[3,6],[8,1],[5,6],[4,5],[3,11],[9,10],[6,8],[6,0],[2,10],[2,8],[4,14],[6,14],[6,9]]}};
+var SIZE = 15;
+var CELLS = SIZE * SIZE;
+
+function toKatakana(input) {
+  var out = "";
+  var chars = Array.from(input);
+  for (var i = 0; i < chars.length; i++) {
+    var code = chars[i].codePointAt(0);
+    if (code >= 0x3041 && code <= 0x3096) out += String.fromCodePoint(code + 0x60);
+    else out += chars[i];
+  }
+  return out;
+}
+function extractKanaAll(raw) {
+  return toKatakana(raw).replace(/[^ァ-ヶー]/g, "");
+}
+function stripLen(clue) {
+  return clue.replace(/\s*[（(][0-9]+(文字)?[）)]\s*$/, "");
+}
+function dirName(d) { return d === "A" ? "ヨコ" : "タテ"; }
+
+/* ----- grid model (derived from the word list, like the paper) ----- */
+var solution = [], isLetter = [], numbers = [], cellWords = [], across = [], down = [], total = 0;
+(function buildModel() {
+  var i, r, c, idx;
+  for (i = 0; i < CELLS; i++) {
+    solution.push("");
+    cellWords.push({ A: null, D: null });
+    numbers.push(null);
+  }
+  var built = DATA.words.map(function (wd) {
+    return { w: wd.w, r: wd.r, c: wd.c, d: wd.d, clue: wd.clue, num: 0, cells: [] };
+  });
+  built.forEach(function (word) {
+    for (var k = 0; k < word.w.length; k++) {
+      var rr = word.d === "D" ? word.r + k : word.r;
+      var cc = word.d === "A" ? word.c + k : word.c;
+      var ii = rr * SIZE + cc;
+      solution[ii] = word.w.charAt(k);
+      word.cells.push(ii);
+      cellWords[ii][word.d] = word;
+    }
+  });
+  isLetter = solution.map(function (s) { return s !== ""; });
+  total = isLetter.filter(Boolean).length;
+  var next = 0;
+  for (r = 0; r < SIZE; r++) {
+    for (c = 0; c < SIZE; c++) {
+      idx = r * SIZE + c;
+      if (!isLetter[idx]) continue;
+      var sa = (c === 0 || !isLetter[idx - 1]) && c + 1 < SIZE && !!isLetter[idx + 1];
+      var sd = (r === 0 || !isLetter[idx - SIZE]) && r + 1 < SIZE && !!isLetter[idx + SIZE];
+      if (sa || sd) { next += 1; numbers[idx] = next; }
+    }
+  }
+  built.forEach(function (word) { word.num = numbers[word.r * SIZE + word.c] || 0; });
+  var byNum = function (a, b) { return a.num - b.num; };
+  across = built.filter(function (w) { return w.d === "A"; }).sort(byNum);
+  down = built.filter(function (w) { return w.d === "D"; }).sort(byNum);
+})();
+
+/* ----- state (this page only; nothing is saved) ----- */
+var values = [], locked = [], wrongSet = {};
+for (var vi = 0; vi < CELLS; vi++) { values.push(""); locked.push(false); }
+var sel = null;
+var composingIdx = -1;
+var editBuf = null;
+var downWasCurrent = false;
+
+var meta = DATA.meta || null;
+var metaCells = meta ? meta.cells.map(function (rc) { return rc[0] * SIZE + rc[1]; }) : [];
+var metaOrder = {};
+metaCells.forEach(function (idx, i) { metaOrder[idx] = i + 1; });
+var metaSolved = false;
+
+/* ----- derived helpers ----- */
+function currentWord() {
+  if (sel) {
+    var cw = cellWords[sel.idx];
+    if (cw && cw[sel.dir]) return cw[sel.dir];
+    if (cw && (cw.A || cw.D)) return cw.A || cw.D;
+  }
+  return across[0] || down[0] || null;
+}
+function countFilled() {
+  var n = 0;
+  for (var i = 0; i < CELLS; i++) if (isLetter[i] && values[i] !== "") n++;
+  return n;
+}
+function isComplete() {
+  for (var i = 0; i < CELLS; i++) if (isLetter[i] && values[i] !== solution[i]) return false;
+  return true;
+}
+function wordDone(w) {
+  return w.cells.every(function (ci) { return values[ci] === solution[ci]; });
+}
+function fillMsg() {
+  return total + "マス中 <strong>" + countFilled() + "マス</strong> 埋まっています";
+}
+function setStatus(html) {
+  document.getElementById("status").innerHTML = html;
+}
+/* ----- painting ----- */
+var cellEls = [], inputs = [], acrossRows = [], downRows = [], metaSlotChars = [];
+
+function paintCell(idx) {
+  var cell = cellEls[idx];
+  var input = inputs[idx];
+  if (!cell || !input) return;
+  var w = currentWord();
+  var cls = "cell";
+  if (w && w.cells.indexOf(idx) >= 0) cls += " in-word";
+  if (sel && sel.idx === idx) cls += " active";
+  if (wrongSet[idx]) cls += " wrong";
+  cell.className = cls;
+  if (composingIdx !== idx) input.value = values[idx];
+  var icls = "";
+  if (locked[idx]) icls = "locked";
+  if (wrongSet[idx]) icls = (icls ? icls + " " : "") + "wrong-letter";
+  input.className = icls;
+}
+function repaint() {
+  for (var i = 0; i < CELLS; i++) if (isLetter[i]) paintCell(i);
+  updateChrome();
+}
+function updateChrome() {
+  var w = currentWord();
+  if (w) {
+    document.getElementById("cc-num").textContent = String(w.num);
+    document.getElementById("cc-dir").textContent = dirName(w.d);
+    var textBox = document.getElementById("cc-text");
+    textBox.innerHTML = "";
+    var t = document.createElement("span");
+    t.textContent = stripLen(w.clue) + " ";
+    var len = document.createElement("span");
+    len.className = "cc-len";
+    len.textContent = "（" + w.w.length + "文字）";
+    textBox.appendChild(t);
+    textBox.appendChild(len);
+    document.getElementById("current-clue").setAttribute(
+      "aria-label",
+      "現在のカギ：" + w.num + " " + dirName(w.d) + "、" + w.clue + "。タップで方向を切り替え。"
+    );
+  }
+  acrossRows.forEach(function (row, i) {
+    var ww = across[i];
+    row.className = "clue-row" + (ww === w ? " sel" : "") + (wordDone(ww) ? " done" : "");
+  });
+  downRows.forEach(function (row, i) {
+    var ww = down[i];
+    row.className = "clue-row" + (ww === w ? " sel" : "") + (wordDone(ww) ? " done" : "");
+  });
+  metaCells.forEach(function (idx, i) {
+    if (metaSlotChars[i]) metaSlotChars[i].textContent = values[idx] || "　";
+  });
+  var pct = total > 0 ? Math.round((countFilled() / total) * 100) : 0;
+  document.getElementById("progress-fill").style.width = pct + "%";
+}
+
+/* ----- movement ----- */
+function focusCell(idx) {
+  var el = inputs[idx];
+  if (el) { el.focus(); el.select(); }
+}
+function moveTo(idx, dir) {
+  var cw = cellWords[idx];
+  var d = dir;
+  if (cw && !cw[d]) d = d === "A" ? "D" : "A";
+  sel = { idx: idx, dir: d };
+  repaint();
+  focusCell(idx);
+}
+function toggleDir() {
+  if (!sel) return;
+  var cw = cellWords[sel.idx];
+  if (!cw) return;
+  var other = sel.dir === "A" ? "D" : "A";
+  if (cw[other]) {
+    sel = { idx: sel.idx, dir: other };
+    repaint();
+  }
+}
+function handleFocus(idx) {
+  var cw = cellWords[idx];
+  if (!cw) return;
+  if (sel && sel.idx === idx) return;
+  var dir = sel ? sel.dir : "A";
+  if (!cw[dir]) dir = dir === "A" ? "D" : "A";
+  if (!cw[dir]) return;
+  sel = { idx: idx, dir: dir };
+  repaint();
+}
+function gotoWord(w) {
+  var target = null;
+  for (var i = 0; i < w.cells.length; i++) {
+    if (values[w.cells[i]] === "") { target = w.cells[i]; break; }
+  }
+  if (target == null) target = w.cells[0];
+  if (target != null) moveTo(target, w.d);
+}
+function jumpClue(step) {
+  var w = currentWord();
+  if (!w) return;
+  var ordered = across.concat(down);
+  var start = ordered.indexOf(w);
+  if (start < 0) return;
+  for (var s = 1; s <= ordered.length; s++) {
+    var cand = ordered[(((start + step * s) % ordered.length) + ordered.length) % ordered.length];
+    for (var i = 0; i < cand.cells.length; i++) {
+      if (values[cand.cells[i]] === "") { moveTo(cand.cells[i], cand.d); return; }
+    }
+  }
+}
+function arrowMove(key, idx) {
+  var r = Math.floor(idx / SIZE), c = idx % SIZE;
+  var dr = 0, dc = 0, dir = "A";
+  if (key === "ArrowUp") { dr = -1; dir = "D"; }
+  else if (key === "ArrowDown") { dr = 1; dir = "D"; }
+  else if (key === "ArrowLeft") { dc = -1; dir = "A"; }
+  else if (key === "ArrowRight") { dc = 1; dir = "A"; }
+  else return;
+  var nr = r + dr, nc = c + dc;
+  while (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && !isLetter[nr * SIZE + nc]) {
+    nr += dr;
+    nc += dc;
+  }
+  if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) return;
+  moveTo(nr * SIZE + nc, dir);
+}
+
+/* ----- typing -----
+   While an IME composition is running, the input keeps showing the
+   in-progress text (kept in editBuf) and nothing rewrites its value:
+   resetting the value mid-composition cancels the composition itself.
+   Commits are accepted from compositionend, from a non-composing input
+   event, or from a blur flush, with an echo guard so the trailing
+   post-commit input event cannot rewind focus. */
+function applyInput(idx, raw, advance) {
+  if (editBuf && editBuf.idx === idx) editBuf = null;
+  var letters = extractKanaAll(raw);
+  if (letters === "") {
+    if (raw === "" && values[idx] !== "" && !locked[idx]) {
+      values[idx] = "";
+      if (wrongSet[idx]) delete wrongSet[idx];
+      repaint();
+      setStatus(fillMsg());
+    } else {
+      paintCell(idx);
+    }
+    return;
+  }
+  var cw = cellWords[idx];
+  var w = (sel && cw && cw[sel.dir]) || (cw && (cw.A || cw.D)) || null;
+  var cells = w ? w.cells : [idx];
+  var startPos = Math.max(0, cells.indexOf(idx));
+  var lastPos = startPos;
+  for (var k = 0; k < letters.length; k++) {
+    var ci = cells[startPos + k];
+    if (ci == null) break;
+    lastPos = startPos + k;
+    if (locked[ci]) continue;
+    values[ci] = letters.charAt(k);
+    if (wrongSet[ci]) delete wrongSet[ci];
+  }
+  repaint();
+  if (isComplete()) {
+    setStatus("完成しました。");
+  } else if (countFilled() === total) {
+    setStatus("すべてのマスが埋まりましたが、間違っている文字があります。「チェック」で確認できます。");
+  } else {
+    setStatus(fillMsg());
+  }
+  if (advance && w) {
+    if (lastPos < cells.length - 1) moveTo(cells[lastPos + 1], w.d);
+    else if (cells[lastPos] != null && cells[lastPos] !== idx) moveTo(cells[lastPos], w.d);
+  }
+}
+function handleKeyDown(e, idx) {
+  if (e.isComposing) return;
+  if (e.key === "Backspace") {
+    e.preventDefault();
+    if (values[idx] !== "" && !locked[idx]) {
+      values[idx] = "";
+      if (wrongSet[idx]) delete wrongSet[idx];
+      repaint();
+      setStatus(fillMsg());
+    } else {
+      var w = currentWord();
+      if (w) {
+        var pos = w.cells.indexOf(idx);
+        if (pos > 0) moveTo(w.cells[pos - 1], w.d);
+      }
+    }
+  } else if (e.key === "Enter" || e.key === "Tab") {
+    e.preventDefault();
+    jumpClue(e.shiftKey ? -1 : 1);
+  } else if (e.key.indexOf("Arrow") === 0) {
+    e.preventDefault();
+    arrowMove(e.key, idx);
+  } else if (e.key === " ") {
+    if (values[idx] === "") e.preventDefault();
+  }
+}
+
+/* ----- board DOM ----- */
+(function buildBoard() {
+  var board = document.getElementById("board");
+  for (var bi = 0; bi < CELLS; bi++) {
+    (function (idx) {
+      if (!isLetter[idx]) {
+        var block = document.createElement("div");
+        block.className = "cell block";
+        block.setAttribute("aria-hidden", "true");
+        board.appendChild(block);
+        cellEls[idx] = block;
+        inputs[idx] = null;
+        return;
+      }
+      var cell = document.createElement("div");
+      cell.className = "cell";
+      cell.setAttribute("role", "gridcell");
+      var num = numbers[idx];
+      if (num != null) {
+        var ns = document.createElement("span");
+        ns.className = "num";
+        ns.setAttribute("aria-hidden", "true");
+        ns.textContent = String(num);
+        cell.appendChild(ns);
+      }
+      if (metaOrder[idx] != null) {
+        var ring = document.createElement("span");
+        ring.className = "meta-ring";
+        ring.setAttribute("aria-hidden", "true");
+        cell.appendChild(ring);
+        var ord = document.createElement("span");
+        ord.className = "meta-order";
+        ord.setAttribute("aria-hidden", "true");
+        ord.textContent = String(metaOrder[idx]);
+        cell.appendChild(ord);
+      }
+      var input = document.createElement("input");
+      input.setAttribute("autocomplete", "off");
+      input.setAttribute("autocorrect", "off");
+      input.setAttribute("autocapitalize", "none");
+      input.setAttribute("spellcheck", "false");
+      input.setAttribute("enterkeyhint", "next");
+      var cw0 = cellWords[idx];
+      var pw = cw0.A || cw0.D;
+      var label = (Math.floor(idx / SIZE) + 1) + "行目、" + (idx % SIZE + 1) + "列目、カギ " + (pw ? pw.num : "");
+      if (metaOrder[idx] != null) label += "、答えの" + metaOrder[idx] + "文字目";
+      input.setAttribute("aria-label", label);
+      input.addEventListener("input", function (e) {
+        if (e.isComposing) {
+          editBuf = { idx: idx, text: input.value };
+          return;
+        }
+        if (editBuf && editBuf.idx === idx) editBuf = null;
+        if (input.value !== "" && input.value === values[idx]) return;
+        applyInput(idx, input.value, true);
+      });
+      input.addEventListener("compositionstart", function () {
+        composingIdx = idx;
+      });
+      input.addEventListener("compositionend", function (e) {
+        composingIdx = -1;
+        var buffered = editBuf && editBuf.idx === idx ? editBuf.text : "";
+        editBuf = null;
+        var text = e.data ? e.data : input.value ? input.value : buffered;
+        if (text !== "" && text === values[idx]) {
+          paintCell(idx);
+          return;
+        }
+        applyInput(idx, text, true);
+      });
+      input.addEventListener("blur", function () {
+        var buf = editBuf;
+        if (!buf || buf.idx !== idx) return;
+        editBuf = null;
+        if (extractKanaAll(buf.text) === "") { paintCell(idx); return; }
+        if (buf.text === values[idx]) { paintCell(idx); return; }
+        applyInput(idx, buf.text, false);
+      });
+      input.addEventListener("keydown", function (e) { handleKeyDown(e, idx); });
+      input.addEventListener("focus", function () {
+        handleFocus(idx);
+        input.select();
+      });
+      input.addEventListener("pointerdown", function () {
+        downWasCurrent = !!sel && sel.idx === idx;
+      });
+      input.addEventListener("click", function () {
+        if (downWasCurrent) toggleDir();
+      });
+      cell.appendChild(input);
+      board.appendChild(cell);
+      cellEls[idx] = cell;
+      inputs[idx] = input;
+    })(bi);
+  }
+})();
+
+/* ----- clue lists ----- */
+function buildClueList(list, containerId) {
+  var container = document.getElementById(containerId);
+  var rows = [];
+  list.forEach(function (w) {
+    var row = document.createElement("div");
+    row.className = "clue-row";
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "clue-btn";
+    btn.setAttribute("aria-label", "カギ " + w.num + " " + dirName(w.d) + "：" + w.clue);
+    var num = document.createElement("span");
+    num.className = "cl-num";
+    num.textContent = String(w.num);
+    var text = document.createElement("span");
+    text.className = "cl-text";
+    text.textContent = stripLen(w.clue) + " ";
+    var len = document.createElement("span");
+    len.className = "cl-len";
+    len.textContent = "（" + w.w.length + "文字）";
+    text.appendChild(len);
+    btn.appendChild(num);
+    btn.appendChild(text);
+    btn.addEventListener("click", function () { gotoWord(w); });
+    row.appendChild(btn);
+    container.appendChild(row);
+    rows.push(row);
+  });
+  return rows;
+}
+acrossRows = buildClueList(across, "clues-across");
+downRows = buildClueList(down, "clues-down");
+
+/* ----- toolbar ----- */
+document.getElementById("current-clue").addEventListener("click", function () {
+  toggleDir();
+});
+document.getElementById("btn-check").addEventListener("click", function () {
+  var correct = 0, wrongN = 0, empty = 0;
+  wrongSet = {};
+  for (var i = 0; i < CELLS; i++) {
+    if (!isLetter[i]) continue;
+    var v = values[i];
+    if (v === "") empty++;
+    else if (v === solution[i]) { correct++; locked[i] = true; }
+    else { wrongN++; wrongSet[i] = true; }
+  }
+  repaint();
+  if (wrongN === 0 && empty === 0) {
+    setStatus("完成しました。");
+  } else {
+    setStatus("チェック：正解 " + correct + " ・ 不正解 " + wrongN + "（赤で表示） ・ 空き " + empty + "。正解のマスはロックされました。");
+  }
+});
+var confirmRow = document.getElementById("confirm-row");
+document.getElementById("btn-clear").addEventListener("click", function () {
+  confirmRow.style.display = "flex";
+});
+document.getElementById("btn-clear-no").addEventListener("click", function () {
+  confirmRow.style.display = "none";
+});
+document.getElementById("btn-clear-yes").addEventListener("click", function () {
+  for (var i = 0; i < CELLS; i++) { values[i] = ""; locked[i] = false; }
+  wrongSet = {};
+  editBuf = null;
+  confirmRow.style.display = "none";
+  repaint();
+  setStatus("グリッドをクリアしました。最初からどうぞ。");
+  var first = across[0] || down[0];
+  if (first && first.cells[0] != null) moveTo(first.cells[0], first.d);
+});
+
+/* ----- theme answer (meta) ----- */
+if (meta) {
+  var slotsBox = document.getElementById("meta-slots");
+  metaCells.forEach(function (idx, i) {
+    var slot = document.createElement("span");
+    slot.className = "meta-slot";
+    var n = document.createElement("span");
+    n.className = "meta-slot-num";
+    n.setAttribute("aria-hidden", "true");
+    n.textContent = String(i + 1);
+    var ch = document.createElement("span");
+    ch.className = "meta-slot-char";
+    ch.textContent = "　";
+    slot.appendChild(n);
+    slot.appendChild(ch);
+    slotsBox.appendChild(slot);
+    metaSlotChars.push(ch);
+  });
+  if (meta.question && /[？?]$/.test(meta.question)) {
+    var qm = document.createElement("span");
+    qm.className = "meta-qmark";
+    qm.setAttribute("aria-hidden", "true");
+    qm.textContent = meta.question.slice(-1);
+    slotsBox.appendChild(qm);
+  }
+  var metaInput = document.getElementById("meta-input");
+  metaInput.addEventListener("input", function () {
+    document.getElementById("meta-empty").style.display = "none";
+    document.getElementById("meta-wrong").style.display = "none";
+  });
+  document.getElementById("meta-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (metaSolved) return;
+    var guess = extractKanaAll(metaInput.value);
+    var emptyMsg = document.getElementById("meta-empty");
+    var wrongMsg = document.getElementById("meta-wrong");
+    if (guess === "") {
+      emptyMsg.style.display = "block";
+      wrongMsg.style.display = "none";
+      return;
+    }
+    emptyMsg.style.display = "none";
+    if (guess === meta.answer) {
+      metaSolved = true;
+      document.getElementById("meta-form").style.display = "none";
+      document.getElementById("meta-answer-echo").textContent = meta.answer;
+      document.getElementById("meta-solved").style.display = "block";
+    } else {
+      wrongMsg.style.display = "block";
+    }
+  });
+}
+
+/* ----- init ----- */
+var firstWord = across[0] || down[0];
+if (firstWord && firstWord.cells[0] != null) {
+  sel = { idx: firstWord.cells[0], dir: firstWord.d };
+}
+repaint();
+setStatus(total + "マス中 <strong>0マス</strong> 埋まっています ・ ヨコ " + across.length + " ・ タテ " + down.length);
+</script>
+  </body>
+</html>

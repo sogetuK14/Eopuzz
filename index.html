@@ -43,7 +43,7 @@
     font-size: min(4.6vw, 34px); letter-spacing: 0.42em; margin-top: 26px;
     color: rgba(62, 178, 232, 0.08); transform: rotate(-8deg); white-space: nowrap;
   }
-  .page { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 40px 16px 40px; }
+  .page { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 16px 16px 40px; }
   .masthead { border-top: 3px solid var(--line); position: relative; margin-top: 4px; }
   .masthead::before { content: ""; display: block; border-top: 1px solid var(--line); margin-top: 2px; }
   .masthead-row {
@@ -63,6 +63,12 @@
     font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", YuMincho, "Noto Serif JP", Georgia, serif;
     font-style: italic; font-size: 15px; color: var(--ink-soft); margin: 12px 2px 4px;
   }
+  .section-title {
+    font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", YuMincho, "Noto Serif JP", Georgia, serif;
+    font-size: 20px; font-weight: 700; letter-spacing: 0.06em;
+    margin: 30px 0 0; padding-top: 12px; border-top: 2px solid var(--line);
+  }
+  .section-title:first-of-type { margin-top: 20px; }
   .sortbar {
     margin-top: 16px; font-size: 13px; color: var(--ink-soft);
     display: flex; align-items: center; gap: 8px;
@@ -114,10 +120,6 @@
 </style>
 </head>
 <body>
-<div class="watermark" aria-hidden="true">
-  <div class="wm-main">EORZEA</div>
-  <div class="wm-alpha">ABCDEFGHIJKLM<br>NOPQRSTUVWXYZ</div>
-</div>
 <div class="page">
   <header class="masthead">
     <div class="masthead-row">
@@ -125,7 +127,7 @@
       <span class="masthead-date">(C) SQUARE ENIX CO., LTD. All Rights Reserved.</span>
     </div>
   </header>
-  <p class="standfirst">FF14のクロスワードパズルです。カタカナで入力してね！</p>
+  <p class="standfirst">FF14のワードを使ったパズル達です。<br>答えはカタカナで入力してね！</p>
 
   <div class="sortbar">
     <span>並び替え：</span>
@@ -134,12 +136,8 @@
     <button type="button" id="sort-no">番号順</button>
   </div>
 
-  <nav class="list" id="puzzle-list" aria-label="パズル一覧">
-    <a class="entry" href="Eopuzz3.html" data-no="3" data-date="2026-11-25">
-      <span class="entry-noimg">No.3</span>
-      <p class="entry-title">えおぱずNo.3</p>
-      <p class="entry-meta">2026.11.25・難易度☆☆</p>
-    </a>
+  <h2 class="section-title">クロスワード</h2>
+  <nav class="list puzzle-list" aria-label="クロスワード一覧">
     <a class="entry" href="Eopuzz2.html" data-no="2" data-date="2026-11-22">
       <img class="entry-thumb" src="Eopuzz2.png" alt="えおぱずNo.2の盤面">
       <p class="entry-title">えおぱずNo.2</p>
@@ -152,21 +150,32 @@
     </a>
   </nav>
 
+  <h2 class="section-title">スケルトンパズル</h2>
+  <nav class="list puzzle-list" aria-label="スケルトンパズル一覧">
+    <a class="entry" href="Eopuzz3.html" data-no="3" data-date="2026-11-25">
+      <span class="entry-noimg">No.3</span>
+      <p class="entry-title">えおぱずNo.3</p>
+      <p class="entry-meta">2026.11.25・難易度☆☆</p>
+    </a>
+  </nav>
+
   <footer class="xw-footer">(C) SQUARE ENIX CO., LTD. All Rights Reserved.</footer>
 </div>
 <script>
   (function () {
-    var list = document.getElementById('puzzle-list');
+    var lists = document.querySelectorAll('.puzzle-list');
     var btnDate = document.getElementById('sort-date');
     var btnNo = document.getElementById('sort-no');
     function sortBy(mode) {
-      var items = Array.prototype.slice.call(list.children);
-      items.sort(function (a, b) {
-        if (mode === 'no') return Number(a.dataset.no) - Number(b.dataset.no);
-        if (a.dataset.date !== b.dataset.date) return a.dataset.date < b.dataset.date ? 1 : -1;
-        return Number(b.dataset.no) - Number(a.dataset.no);
+      lists.forEach(function (list) {
+        var items = Array.prototype.slice.call(list.children);
+        items.sort(function (a, b) {
+          if (mode === 'no') return Number(a.dataset.no) - Number(b.dataset.no);
+          if (a.dataset.date !== b.dataset.date) return a.dataset.date < b.dataset.date ? 1 : -1;
+          return Number(b.dataset.no) - Number(a.dataset.no);
+        });
+        items.forEach(function (el) { list.appendChild(el); });
       });
-      items.forEach(function (el) { list.appendChild(el); });
       btnDate.classList.toggle('active', mode === 'date');
       btnNo.classList.toggle('active', mode === 'no');
     }

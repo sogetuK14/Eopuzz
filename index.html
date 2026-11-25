@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>えおぱず</title>
+<meta name="description" content="FF14のクロスワードパズル「えおぱず」の一覧ページです。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="えおぱず">
+<meta property="og:description" content="FF14のクロスワードパズル「えおぱず」の一覧ページです。">
+<meta property="og:image" content="https://sogetuk14.github.io/Eopuzz/Eopuzz1.png">
+<style>
+  :root {
+    --ink: #111;
+    --ink-soft: #555;
+    --line: #111;
+    --line-soft: #ccc;
+    --mark: #c8102e;
+    --surface: #fff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: linear-gradient(180deg, #fbfdfe 0%, #eef7fb 100%);
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", YuGothic, "Noto Sans JP", sans-serif;
+    overflow-x: hidden;
+  }
+  .watermark {
+    position: fixed; inset: 0; z-index: 0; overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    pointer-events: none; user-select: none;
+  }
+  .watermark .wm-main {
+    font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", YuMincho, "Noto Serif JP", Georgia, serif;
+    font-weight: 700; font-size: min(24vw, 190px); letter-spacing: 0.1em; line-height: 1;
+    color: rgba(62, 178, 232, 0.07); transform: rotate(-8deg); white-space: nowrap;
+  }
+  .watermark .wm-alpha {
+    font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", YuMincho, "Noto Serif JP", Georgia, serif;
+    font-size: min(4.6vw, 34px); letter-spacing: 0.42em; margin-top: 26px;
+    color: rgba(62, 178, 232, 0.08); transform: rotate(-8deg); white-space: nowrap;
+  }
+  .page { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 16px 16px 40px; }
+  .masthead { border-top: 3px solid var(--line); position: relative; margin-top: 4px; }
+  .masthead::before { content: ""; display: block; border-top: 1px solid var(--line); margin-top: 2px; }
+  .masthead-row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    padding: 10px 2px 8px; border-bottom: 1px solid var(--line);
+  }
+  .masthead-label {
+    font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", YuMincho, "Noto Serif JP", Georgia, serif;
+    font-size: 26px; font-weight: 700; letter-spacing: 0.06em;
+  }
+  .masthead-label .diamond {
+    display: inline-block; width: 11px; height: 11px; margin-right: 9px;
+    background: var(--mark); transform: rotate(45deg); vertical-align: baseline;
+  }
+  .masthead-date { font-size: 11px; color: var(--ink-soft); letter-spacing: 0.04em; text-align: right; }
+  .standfirst {
+    font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", YuMincho, "Noto Serif JP", Georgia, serif;
+    font-style: italic; font-size: 15px; color: var(--ink-soft); margin: 12px 2px 4px;
+  }
+  .sortbar {
+    margin-top: 16px; font-size: 13px; color: var(--ink-soft);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sortbar button {
+    font: inherit; color: var(--ink-soft); background: none; border: none;
+    padding: 2px 4px; cursor: pointer; letter-spacing: 0.04em;
+  }
+  .sortbar button.active { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+  .list {
+    margin-top: 14px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px 18px;
+  }
+  /* 件数が増えたら列を増やして、画像が小さくなっていく */
+  .list:has(> :nth-child(7)) { grid-template-columns: repeat(4, 1fr); gap: 20px 14px; }
+  .list:has(> :nth-child(13)) { grid-template-columns: repeat(5, 1fr); gap: 18px 12px; }
+  .list:has(> :nth-child(13)) .entry-title { font-size: 16px; }
+  .entry { text-decoration: none; color: var(--ink); display: block; }
+  .entry:active { opacity: 0.75; }
+  .entry:hover .entry-title { color: #1b7fb8; }
+  .entry:hover .entry-thumb, .entry:hover .entry-noimg { border-color: rgba(62, 178, 232, 0.55); }
+  .entry-thumb {
+    width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: top;
+    border: 1px solid var(--line-soft); background: #fafafa; display: block;
+  }
+  .entry-noimg {
+    width: 100%; aspect-ratio: 4 / 3;
+    border: 1px solid var(--line-soft); background: #fafafa;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", YuMincho, "Noto Serif JP", Georgia, serif;
+    font-size: 16px; color: var(--ink-soft); letter-spacing: 0.08em;
+  }
+  .entry-title {
+    font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", YuMincho, "Noto Serif JP", Georgia, serif;
+    font-size: 18px; font-weight: 700; margin: 10px 0 2px;
+  }
+  .entry-meta { font-size: 12px; color: var(--ink-soft); margin: 0; }
+  .xw-footer {
+    margin-top: 26px; padding-top: 10px; border-top: 1px solid var(--line);
+    font-size: 11px; color: var(--ink-soft); text-align: center; letter-spacing: 0.04em;
+  }
+  @media (max-width: 560px) {
+    .masthead-row { flex-direction: column; align-items: center; text-align: center; }
+    .masthead-date { text-align: center; }
+    .list { grid-template-columns: repeat(2, 1fr); gap: 18px 12px; }
+    .list:has(> :nth-child(7)) { grid-template-columns: repeat(3, 1fr); gap: 16px 10px; }
+    .entry-title { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="watermark" aria-hidden="true">
+  <div class="wm-main">EORZEA</div>
+  <div class="wm-alpha">ABCDEFGHIJKLM<br>NOPQRSTUVWXYZ</div>
+</div>
+<div class="page">
+  <header class="masthead">
+    <div class="masthead-row">
+      <span class="masthead-label"><span class="diamond" aria-hidden="true"></span>えおぱず</span>
+      <span class="masthead-date">(C) SQUARE ENIX CO., LTD. All Rights Reserved.</span>
+    </div>
+  </header>
+  <p class="standfirst">FF14のクロスワードパズルです。カタカナで入力してね！</p>
+
+  <div class="sortbar">
+    <span>並び替え：</span>
+    <button type="button" id="sort-date" class="active">更新順</button>
+    <span aria-hidden="true">｜</span>
+    <button type="button" id="sort-no">番号順</button>
+  </div>
+
+  <nav class="list" id="puzzle-list" aria-label="パズル一覧">
+    <a class="entry" href="Eopuzz3.html" data-no="3" data-date="2026-11-25">
+      <span class="entry-noimg">No.3</span>
+      <p class="entry-title">えおぱずNo.3</p>
+      <p class="entry-meta">2026.11.25・難易度☆☆</p>
+    </a>
+    <a class="entry" href="Eopuzz2.html" data-no="2" data-date="2026-11-22">
+      <img class="entry-thumb" src="Eopuzz2.png" alt="えおぱずNo.2の盤面">
+      <p class="entry-title">えおぱずNo.2</p>
+      <p class="entry-meta">2026.11.22</p>
+    </a>
+    <a class="entry" href="Eopuzz1.html" data-no="1" data-date="2026-11-20">
+      <img class="entry-thumb" src="Eopuzz1.png" alt="えおぱずNo.1の盤面">
+      <p class="entry-title">えおぱずNo.1</p>
+      <p class="entry-meta">2026.11.20</p>
+    </a>
+  </nav>
+
+  <footer class="xw-footer">(C) SQUARE ENIX CO., LTD. All Rights Reserved.</footer>
+</div>
+<script>
+  (function () {
+    var list = document.getElementById('puzzle-list');
+    var btnDate = document.getElementById('sort-date');
+    var btnNo = document.getElementById('sort-no');
+    function sortBy(mode) {
+      var items = Array.prototype.slice.call(list.children);
+      items.sort(function (a, b) {
+        if (mode === 'no') return Number(a.dataset.no) - Number(b.dataset.no);
+        if (a.dataset.date !== b.dataset.date) return a.dataset.date < b.dataset.date ? 1 : -1;
+        return Number(b.dataset.no) - Number(a.dataset.no);
+      });
+      items.forEach(function (el) { list.appendChild(el); });
+      btnDate.classList.toggle('active', mode === 'date');
+      btnNo.classList.toggle('active', mode === 'no');
+    }
+    btnDate.addEventListener('click', function () { sortBy('date'); });
+    btnNo.addEventListener('click', function () { sortBy('no'); });
+  })();
+</script>
+</body>
+</html>

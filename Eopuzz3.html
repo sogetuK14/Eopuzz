@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="color-scheme" content="light" />
+    <link rel="icon" href="data:," />
+    <title>えおぱずNo.3</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="えおぱずNo.3" />
+    <meta property="og:description" content="難易度☆☆" />
+    <meta name="description" content="難易度☆☆" />
+    <style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background:#ffffff; color:#111111; font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Yu Gothic","Noto Sans JP","Helvetica Neue",Arial,sans-serif; }
+.serif { font-family:"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho","Noto Serif JP",Georgia,"Times New Roman",serif; }
+.layout { display:grid; grid-template-columns:minmax(0,680px) minmax(260px,1fr); gap:36px; align-items:start; max-width:1180px; margin:0 auto; padding:20px 20px 8px; }
+@media (max-width:820px){ .layout{ grid-template-columns:minmax(0,1fr); padding:14px 12px 8px; } }
+.masthead { border-top:3px solid #111111; position:relative; margin-top:4px; }
+.masthead::before { content:""; display:block; border-top:1px solid #111111; margin-top:2px; }
+.masthead-row { display:flex; justify-content:space-between; align-items:baseline; gap:8px 20px; flex-wrap:wrap; padding:8px 0 9px; }
+.masthead::after { content:""; display:block; border-top:1px solid #111111; border-bottom:3px solid #111111; height:2px; }
+.masthead-label { font-size:12px; letter-spacing:0.14em; font-weight:700; white-space:nowrap; }
+.masthead-label .diamond { display:inline-block; width:8px; height:8px; background:#c8102e; transform:rotate(45deg); margin-right:9px; vertical-align:1px; }
+.masthead-date { font-size:12px; letter-spacing:0.14em; white-space:nowrap; }
+@media (max-width:560px){ .masthead-row{ flex-direction:column; align-items:center; text-align:center; } }
+.standfirst { font-family:"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho","Noto Serif JP",Georgia,serif; font-style:italic; font-size:16px; color:#5c5c5c; margin:18px 0 16px; }
+#board { container-type:size; display:grid; aspect-ratio:17 / 16; width:100%; border:2px solid #111111; touch-action:manipulation; user-select:none; -webkit-user-select:none; background:#ffffff; }
+.cell { position:relative; border-right:1px solid #111111; border-bottom:1px solid #111111; background:#ffffff; }
+.cell.block { background:#111111; }
+.cell.in-word { background:#dfeaf5; }
+.cell.active { background:#ffe27a; box-shadow:inset 0 0 0 2px #111111; z-index:1; }
+.cell.wrong { background:rgba(200,16,46,0.1); }
+.cell input { position:absolute; inset:0; width:100%; height:100%; min-height:0; border:none; background:transparent; text-align:center; font-family:inherit; font-weight:600; font-size:max(16px,5.6cqw); line-height:1; padding:12% 0 0; margin:0; color:#111111; outline:none; caret-color:#111111; border-radius:0; -webkit-appearance:none; appearance:none; }
+.cell input.locked { font-weight:700; }
+.cell input.wrong-letter { color:#c8102e; }
+.cell .meta-ring { position:absolute; inset:13%; border:2px solid #c8102e; border-radius:50%; pointer-events:none; z-index:1; }
+.cell .meta-order { position:absolute; right:2px; bottom:1px; font-size:min(2.1cqw,11px); font-weight:700; line-height:1; color:#c8102e; pointer-events:none; z-index:2; }
+.current-clue { display:flex; align-items:baseline; gap:10px; width:100%; margin-top:14px; padding:10px 12px; border:1.5px solid #111111; border-left:4px solid #c8102e; background:#ffffff; color:#111111; text-align:left; cursor:pointer; min-height:42px; font-family:inherit; }
+.current-clue .cc-dir { font-size:12px; letter-spacing:0.14em; color:#c8102e; font-weight:700; white-space:nowrap; }
+.current-clue .cc-text { font-family:"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho","Noto Serif JP",Georgia,serif; font-size:16px; line-height:1.35; flex:1; }
+.current-clue .cc-hint { margin-left:auto; font-size:11px; letter-spacing:0.08em; color:#5c5c5c; white-space:nowrap; align-self:center; }
+@media (max-width:560px){ .current-clue .cc-hint{ display:none; } }
+.toolbar { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.toolbar button { font-family:inherit; font-size:13px; font-weight:600; letter-spacing:0.04em; min-height:42px; padding:8px 14px; border:1.5px solid #111111; background:#ffffff; color:#111111; cursor:pointer; border-radius:0; }
+.toolbar button.primary { background:#111111; color:#ffffff; border-color:#111111; }
+.toolbar button:active { transform:translateY(1px); }
+.confirm-row { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-top:12px; padding:10px 12px; border:1.5px solid #111111; font-size:14px; }
+.confirm-row .cr-text { font-family:"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho","Noto Serif JP",Georgia,serif; font-size:15px; flex:1; min-width:180px; }
+.confirm-row button { font-family:inherit; font-size:13px; font-weight:600; min-height:42px; padding:8px 14px; border:1.5px solid #111111; background:#ffffff; color:#111111; cursor:pointer; border-radius:0; }
+.confirm-row button.danger { background:#111111; color:#ffffff; border-color:#111111; }
+.status { font-size:13px; line-height:1.5; margin:14px 0 0; min-height:20px; }
+.progress { height:3px; background:transparent; border-top:1px solid #111111; margin-top:6px; }
+.progress-fill { height:3px; background:#c8102e; transition:width 200ms ease; }
+.meta { margin-top:22px; border-top:3px solid #111111; border-bottom:1px solid #111111; padding:12px 2px 14px; }
+.meta-head { font-size:13px; letter-spacing:0.14em; font-weight:700; margin:0 0 10px; }
+.meta-slots { display:flex; flex-wrap:wrap; gap:6px; }
+.meta-slot { position:relative; width:44px; height:48px; border:1.5px solid #111111; display:flex; align-items:center; justify-content:center; background:#ffffff; }
+.meta-slot-num { position:absolute; top:2px; left:4px; font-size:10px; font-weight:700; color:#c8102e; line-height:1; }
+.meta-slot-char { font-size:22px; font-weight:700; line-height:1; padding-top:6px; }
+.meta-form { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.meta-label { font-size:12px; letter-spacing:0.08em; color:#5c5c5c; font-weight:600; }
+.meta-input { font-family:inherit; font-size:16px; font-weight:600; letter-spacing:0.12em; padding:8px 10px; border:1.5px solid #111111; border-radius:0; background:#ffffff; color:#111111; min-height:42px; width:200px; max-width:100%; }
+.meta-submit { font-family:inherit; font-size:13px; font-weight:600; letter-spacing:0.04em; min-height:42px; padding:8px 16px; border:1.5px solid #111111; background:#111111; color:#ffffff; cursor:pointer; border-radius:0; }
+.meta-submit:active { transform:translateY(1px); }
+.meta-wrong { font-size:14px; color:#c8102e; margin:0; flex-basis:100%; }
+.meta-solved { margin-top:12px; border:1.5px solid #111111; border-left:4px solid #c8102e; padding:10px 12px; }
+.meta-solved-head { font-family:"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho","Noto Serif JP",Georgia,serif; font-weight:600; font-size:19px; margin:0 0 2px; }
+.meta-solved-body { font-family:"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho","Noto Serif JP",Georgia,serif; font-size:15px; margin:0; }
+.clue-col-head { font-size:13px; letter-spacing:0.14em; font-weight:700; border-top:1px solid #111111; border-bottom:1px solid #111111; padding:7px 0 6px; margin:0 0 6px; }
+.wgroup { margin:0 0 14px; }
+.wgroup .wl { font-weight:700; font-size:15px; margin:0 0 4px; }
+.wgroup .ww { margin:2px 0 2px 10px; font-size:15px; line-height:1.5; }
+.wgroup .ww.used { color:#5c5c5c; text-decoration:line-through; opacity:0.55; }
+.xw-footer { max-width:1180px; margin:0 auto; padding:12px 20px 30px; font-size:12px; letter-spacing:0.08em; color:#5c5c5c; }
+@media (max-width:820px){ .xw-footer{ padding:12px 12px 30px; } }
+</style>
+  </head>
+  <body>
+    <div class="xw">
+      <div class="layout">
+        <div class="board-col">
+          <header class="masthead">
+            <div class="masthead-row">
+              <span class="masthead-label">
+                <span class="diamond" aria-hidden="true"></span>
+                えおぱずNo.3
+              </span>
+              <span class="masthead-date">(C) SQUARE ENIX CO., LTD. All Rights Reserved.</span>
+            </div>
+          </header>
+
+          <p class="standfirst">難易度☆☆</p>
+
+          <div id="board" role="grid" aria-label="スケルトンパズルの盤面"></div>
+
+          <button type="button" class="current-clue" id="current-clue" aria-live="polite" aria-label="現在の単語">
+            <span class="cc-dir" id="cc-dir"></span>
+            <span class="cc-text" id="cc-text"></span>
+            <span class="cc-hint">タップで切り替え</span>
+          </button>
+
+          <div class="toolbar">
+            <button type="button" class="primary" id="btn-check">チェック</button>
+            <button type="button" id="btn-clear">クリア</button>
+          </div>
+
+          <div class="confirm-row" id="confirm-row" style="display: none">
+            <span class="cr-text">グリッドをクリアしますか？入力した文字はすべて消えます。</span>
+            <button type="button" class="danger" id="btn-clear-yes">クリアする</button>
+            <button type="button" id="btn-clear-no">キャンセル</button>
+          </div>
+
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+          <div class="progress" aria-hidden="true">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+
+          <section class="meta" aria-label="答え">
+            <h2 class="meta-head">答え</h2>
+            <div class="meta-slots" id="meta-slots" aria-label="拾った文字"></div>
+            <div class="meta-form" id="meta-form">
+              <label class="meta-label" for="meta-input">答えを入力</label>
+              <input
+                id="meta-input"
+                class="meta-input"
+                type="text"
+                placeholder="カタカナで入力"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="none"
+                spellcheck="false"
+              />
+              <button type="button" class="meta-submit" id="btn-meta">答える</button>
+              <p class="meta-wrong" id="meta-wrong" role="status" style="display: none"></p>
+            </div>
+            <div class="meta-solved" id="meta-solved" role="status" style="display: none">
+              <p class="meta-solved-head">正解！</p>
+              <p class="meta-solved-body">答えは「<span id="meta-answer-echo"></span>」でした！</p>
+            </div>
+          </section>
+        </div>
+
+        <div class="side-col">
+          <h2 class="clue-col-head">単語リスト</h2>
+          <div id="word-list"></div>
+        </div>
+      </div>
+
+      <footer class="xw-footer">(C) SQUARE ENIX CO., LTD. All Rights Reserved.</footer>
+    </div>
+    <script>
+"use strict";
+var DATA = {"w":17,"h":16,"solution":["","","","","","","","","","サ","ン","ク","レ","ッ","ド","","","","","","","","","","","","ボ","","","","","","","","","","","","","ヤ","","","","テ","","","","","","","","","","","","","シ","ョ","ウ","カ","ン","シ","","","ケ","","","","","","","","","ュ","","","","ダ","","","","ア","","","","","","","","","ト","","","カ","ー","バ","ン","ク","ル","","","","","","","","ダ","ラ","ガ","ブ","","","ハ","","","","","","","","","","","","","","","","ラ","ム","ウ","","","","","","","","","","","","","","","","ー","","","ハ","ウ","ケ","タ","","","","","","","","","ナ","イ","ト","","","","リ","","イ","","","","","","","","","","フ","","","","","エ","","タ","","","","","","","ア","","","リ","","エ","レ","ゼ","ン","","ン","","","","","ゴ","ー","ル","ド","ソ","ー","サ","ー","","","ジ","","","","","","ク","","","フ","","","ト","","テ","","","ェ","","","","","","ル","ガ","デ","ィ","ン","","","","ル","","","","","","モ","ル","ボ","ル","","","ノ","","","","","","","","","",""],"slots":[{"cells":[9,10,11,12,13,14],"d":"A","w":"サンクレッド"},{"cells":[9,26,43,60,77,94],"d":"D","w":"サボテンダー"},{"cells":[39,56,73,90,107],"d":"D","w":"ヤシュトラ"},{"cells":[56,57,58,59,60,61],"d":"A","w":"ショウカンシ"},{"cells":[64,81,98],"d":"D","w":"ケアル"},{"cells":[93,94,95,96,97,98],"d":"A","w":"カーバンクル"},{"cells":[95,112,129,146,163],"d":"D","w":"バハムート"},{"cells":[106,107,108,109],"d":"A","w":"ダラガブ"},{"cells":[128,129,130],"d":"A","w":"ラムウ"},{"cells":[149,150,151,152],"d":"A","w":"ハウケタ"},{"cells":[150,167,184,201,218,235],"d":"D","w":"ウリエンジェ"},{"cells":[152,169,186,203],"d":"D","w":"タイタン"},{"cells":[161,162,163],"d":"A","w":"ナイト"},{"cells":[162,179,196,213,230],"d":"D","w":"イフリート"},{"cells":[193,210,227,244,261],"d":"D","w":"アルフィノ"},{"cells":[198,199,200,201],"d":"A","w":"エレゼン"},{"cells":[198,215,232,249],"d":"D","w":"エーテル"},{"cells":[208,209,210,211,212,213,214,215],"d":"A","w":"ゴールドソーサー"},{"cells":[224,241,258],"d":"D","w":"クルル"},{"cells":[241,242,243,244,245],"d":"A","w":"ルガディン"},{"cells":[255,256,257,258],"d":"A","w":"モルボル"}],"marks":[58,98,77,112,261,56,73,208,61,10,149,106,199],"wordGroups":[{"len":3,"words":["クルル","ケアル","ナイト","ラムウ"]},{"len":4,"words":["エーテル","エレゼン","タイタン","ダラガブ","ハウケタ","モルボル"]},{"len":5,"words":["アルフィノ","イフリート","バハムート","ヤシュトラ","ルガディン"]},{"len":6,"words":["ウリエンジェ","カーバンクル","サボテンダー","サンクレッド","ショウカンシ"]},{"len":8,"words":["ゴールドソーサー"]}],"answer":"ナルザル"};
+var W = DATA.w, H = DATA.h, CELLS = W * H;
+var solution = DATA.solution;
+var isLetter = solution.map(function (s) { return s !== ""; });
+var total = isLetter.filter(Boolean).length;
+var slots = DATA.slots;
+var cellWords = [];
+for (var i0 = 0; i0 < CELLS; i0++) cellWords.push({ A: null, D: null });
+slots.forEach(function (s) {
+  s.cells.forEach(function (ci) { cellWords[ci][s.d] = s; });
+});
+var metaCells = DATA.marks;
+var metaOrder = {};
+metaCells.forEach(function (idx, i) { metaOrder[idx] = i + 1; });
+
+function toKatakana(input) {
+  var out = "";
+  var chars = Array.from(input);
+  for (var i = 0; i < chars.length; i++) {
+    var code = chars[i].codePointAt(0);
+    if (code >= 0x3041 && code <= 0x3096) out += String.fromCodePoint(code + 0x60);
+    else out += chars[i];
+  }
+  return out;
+}
+function extractKanaAll(raw) {
+  return toKatakana(raw).replace(/[^ァ-ヶー]/g, "");
+}
+function dirName(d) { return d === "A" ? "ヨコ" : "タテ"; }
+
+/* ----- state (this page only; nothing is saved) ----- */
+var values = [], locked = [], wrongSet = {};
+for (var vi = 0; vi < CELLS; vi++) { values.push(""); locked.push(false); }
+var sel = null;
+var composingIdx = -1;
+var editBuf = null;
+var downWasCurrent = false;
+var metaSolved = false;
+
+function currentWord() {
+  if (sel) {
+    var cw = cellWords[sel.idx];
+    if (cw && cw[sel.dir]) return cw[sel.dir];
+    if (cw && (cw.A || cw.D)) return cw.A || cw.D;
+  }
+  return slots[0] || null;
+}
+function countFilled() {
+  var n = 0;
+  for (var i = 0; i < CELLS; i++) if (isLetter[i] && values[i] !== "") n++;
+  return n;
+}
+function isComplete() {
+  for (var i = 0; i < CELLS; i++) if (isLetter[i] && values[i] !== solution[i]) return false;
+  return true;
+}
+function fillMsg() {
+  return total + "マス中 <strong>" + countFilled() + "マス</strong> 埋まっています";
+}
+function setStatus(html) {
+  document.getElementById("status").innerHTML = html;
+}
+function computeUsed() {
+  var counts = {};
+  slots.forEach(function (s) {
+    var str = "";
+    var full = true;
+    s.cells.forEach(function (ci) {
+      if (values[ci] === "") full = false;
+      str += values[ci];
+    });
+    if (full) counts[str] = (counts[str] || 0) + 1;
+  });
+  var used = {};
+  var remaining = {};
+  for (var k in counts) remaining[k] = counts[k];
+  DATA.wordGroups.forEach(function (g) {
+    g.words.forEach(function (w) {
+      var c = remaining[w] || 0;
+      if (c > 0) { used[w] = true; remaining[w] = c - 1; }
+    });
+  });
+  return used;
+}
+
+/* ----- painting ----- */
+var cellEls = [], inputs = [], metaSlotChars = [], wordEls = [];
+
+function paintCell(idx) {
+  var cell = cellEls[idx];
+  var input = inputs[idx];
+  if (!cell || !input) return;
+  var w = currentWord();
+  var cls = "cell";
+  if (w && w.cells.indexOf(idx) >= 0) cls += " in-word";
+  if (sel && sel.idx === idx) cls += " active";
+  if (wrongSet[idx]) cls += " wrong";
+  cell.className = cls;
+  if (composingIdx !== idx) input.value = values[idx];
+  var icls = "";
+  if (locked[idx]) icls = "locked";
+  if (wrongSet[idx]) icls = (icls ? icls + " " : "") + "wrong-letter";
+  input.className = icls;
+}
+function repaint() {
+  for (var i = 0; i < CELLS; i++) if (isLetter[i]) paintCell(i);
+  updateChrome();
+}
+function updateChrome() {
+  var w = currentWord();
+  if (w) {
+    document.getElementById("cc-dir").textContent = dirName(w.d);
+    document.getElementById("cc-text").textContent = w.cells.length + "文字の単語";
+  }
+  metaCells.forEach(function (idx, i) {
+    if (metaSlotChars[i]) metaSlotChars[i].textContent = values[idx] || "　";
+  });
+  var used = computeUsed();
+  wordEls.forEach(function (rec) {
+    rec.el.className = "ww" + (used[rec.w] ? " used" : "");
+  });
+  var pct = total > 0 ? Math.round((countFilled() / total) * 100) : 0;
+  document.getElementById("progress-fill").style.width = pct + "%";
+}
+
+/* ----- movement ----- */
+function focusCell(idx) {
+  var el = inputs[idx];
+  if (el) { el.focus(); el.select(); }
+}
+function moveTo(idx, dir) {
+  var cw = cellWords[idx];
+  if (!cw) return;
+  var d = dir;
+  if (!cw[d]) d = d === "A" ? "D" : "A";
+  if (!cw[d]) return;
+  sel = { idx: idx, dir: d };
+  repaint();
+  focusCell(idx);
+}
+function toggleDir() {
+  if (!sel) return;
+  var cw = cellWords[sel.idx];
+  if (!cw) return;
+  var other = sel.dir === "A" ? "D" : "A";
+  if (cw[other]) {
+    sel = { idx: sel.idx, dir: other };
+    repaint();
+  }
+}
+function handleFocus(idx) {
+  var cw = cellWords[idx];
+  if (!cw) return;
+  if (sel && sel.idx === idx) return;
+  var dir = sel ? sel.dir : "A";
+  if (!cw[dir]) dir = dir === "A" ? "D" : "A";
+  if (!cw[dir]) return;
+  sel = { idx: idx, dir: dir };
+  repaint();
+}
+function jumpSlot(step) {
+  var w = currentWord();
+  if (!w) return;
+  var start = slots.indexOf(w);
+  if (start < 0) return;
+  for (var s = 1; s <= slots.length; s++) {
+    var cand = slots[(((start + step * s) % slots.length) + slots.length) % slots.length];
+    for (var i = 0; i < cand.cells.length; i++) {
+      if (values[cand.cells[i]] === "") { moveTo(cand.cells[i], cand.d); return; }
+    }
+  }
+}
+function arrowMove(key, idx) {
+  var r = Math.floor(idx / W), c = idx % W;
+  var dr = 0, dc = 0, dir = "A";
+  if (key === "ArrowUp") { dr = -1; dir = "D"; }
+  else if (key === "ArrowDown") { dr = 1; dir = "D"; }
+  else if (key === "ArrowLeft") { dc = -1; dir = "A"; }
+  else if (key === "ArrowRight") { dc = 1; dir = "A"; }
+  else return;
+  var nr = r + dr, nc = c + dc;
+  while (nr >= 0 && nr < H && nc >= 0 && nc < W && !isLetter[nr * W + nc]) {
+    nr += dr;
+    nc += dc;
+  }
+  if (nr < 0 || nr >= H || nc < 0 || nc >= W) return;
+  moveTo(nr * W + nc, dir);
+}
+
+/* ----- typing ----- */
+function applyInput(idx, raw, advance) {
+  if (editBuf && editBuf.idx === idx) editBuf = null;
+  var letters = extractKanaAll(raw);
+  if (letters === "") {
+    if (raw === "" && values[idx] !== "" && !locked[idx]) {
+      values[idx] = "";
+      if (wrongSet[idx]) delete wrongSet[idx];
+      repaint();
+      setStatus(fillMsg());
+    } else {
+      paintCell(idx);
+    }
+    return;
+  }
+  var cw = cellWords[idx];
+  var w = (sel && cw && cw[sel.dir]) || (cw && (cw.A || cw.D)) || null;
+  var cells = w ? w.cells : [idx];
+  var startPos = Math.max(0, cells.indexOf(idx));
+  var lastPos = startPos;
+  for (var k = 0; k < letters.length; k++) {
+    var ci = cells[startPos + k];
+    if (ci == null) break;
+    lastPos = startPos + k;
+    if (locked[ci]) continue;
+    values[ci] = letters.charAt(k);
+    if (wrongSet[ci]) delete wrongSet[ci];
+  }
+  repaint();
+  if (isComplete()) {
+    setStatus("完成しました。");
+  } else if (countFilled() === total) {
+    setStatus("すべてのマスが埋まりましたが、間違っている文字があります。「チェック」で確認できます。");
+  } else {
+    setStatus(fillMsg());
+  }
+  if (advance && w) {
+    if (lastPos < cells.length - 1) moveTo(cells[lastPos + 1], w.d);
+    else if (cells[lastPos] != null && cells[lastPos] !== idx) moveTo(cells[lastPos], w.d);
+  }
+}
+function handleKeyDown(e, idx) {
+  if (e.isComposing) return;
+  if (e.key === "Backspace") {
+    e.preventDefault();
+    if (values[idx] !== "" && !locked[idx]) {
+      values[idx] = "";
+      if (wrongSet[idx]) delete wrongSet[idx];
+      repaint();
+      setStatus(fillMsg());
+    } else {
+      var w = currentWord();
+      if (w) {
+        var pos = w.cells.indexOf(idx);
+        if (pos > 0) moveTo(w.cells[pos - 1], w.d);
+      }
+    }
+  } else if (e.key === "Enter" || e.key === "Tab") {
+    e.preventDefault();
+    jumpSlot(e.shiftKey ? -1 : 1);
+  } else if (e.key.indexOf("Arrow") === 0) {
+    e.preventDefault();
+    arrowMove(e.key, idx);
+  } else if (e.key === " ") {
+    if (values[idx] === "") e.preventDefault();
+  }
+}
+
+/* ----- board DOM ----- */
+(function buildBoard() {
+  var board = document.getElementById("board");
+  board.style.gridTemplateColumns = "repeat(" + W + ", 1fr)";
+  board.style.gridTemplateRows = "repeat(" + H + ", 1fr)";
+  for (var bi = 0; bi < CELLS; bi++) {
+    (function (idx) {
+      if (!isLetter[idx]) {
+        var block = document.createElement("div");
+        block.className = "cell block";
+        block.setAttribute("aria-hidden", "true");
+        board.appendChild(block);
+        cellEls[idx] = block;
+        inputs[idx] = null;
+        return;
+      }
+      var cell = document.createElement("div");
+      cell.className = "cell";
+      cell.setAttribute("role", "gridcell");
+      if (metaOrder[idx] != null) {
+        var ring = document.createElement("span");
+        ring.className = "meta-ring";
+        ring.setAttribute("aria-hidden", "true");
+        cell.appendChild(ring);
+        var ord = document.createElement("span");
+        ord.className = "meta-order";
+        ord.setAttribute("aria-hidden", "true");
+        ord.textContent = String(metaOrder[idx]);
+        cell.appendChild(ord);
+      }
+      var input = document.createElement("input");
+      input.setAttribute("autocomplete", "off");
+      input.setAttribute("autocorrect", "off");
+      input.setAttribute("autocapitalize", "none");
+      input.setAttribute("spellcheck", "false");
+      input.setAttribute("enterkeyhint", "next");
+      input.setAttribute("aria-label", "盤面 " + (Math.floor(idx / W) + 1) + "行 " + (idx % W + 1) + "列");
+      input.addEventListener("input", function (e) {
+        if (e.isComposing) {
+          editBuf = { idx: idx, text: input.value };
+          return;
+        }
+        if (editBuf && editBuf.idx === idx) editBuf = null;
+        if (input.value !== "" && input.value === values[idx]) return;
+        applyInput(idx, input.value, true);
+      });
+      input.addEventListener("compositionstart", function () {
+        composingIdx = idx;
+      });
+      input.addEventListener("compositionend", function (e) {
+        composingIdx = -1;
+        var buffered = editBuf && editBuf.idx === idx ? editBuf.text : "";
+        editBuf = null;
+        var text = e.data ? e.data : input.value ? input.value : buffered;
+        if (text !== "" && text === values[idx]) {
+          paintCell(idx);
+          return;
+        }
+        applyInput(idx, text, true);
+      });
+      input.addEventListener("blur", function () {
+        var buf = editBuf;
+        if (!buf || buf.idx !== idx) return;
+        editBuf = null;
+        if (extractKanaAll(buf.text) === "") { paintCell(idx); return; }
+        if (buf.text === values[idx]) { paintCell(idx); return; }
+        applyInput(idx, buf.text, false);
+      });
+      input.addEventListener("keydown", function (e) { handleKeyDown(e, idx); });
+      input.addEventListener("focus", function () {
+        handleFocus(idx);
+        input.select();
+      });
+      input.addEventListener("pointerdown", function () {
+        downWasCurrent = !!sel && sel.idx === idx;
+      });
+      input.addEventListener("click", function () {
+        if (downWasCurrent) toggleDir();
+      });
+      cell.appendChild(input);
+      board.appendChild(cell);
+      cellEls[idx] = cell;
+      inputs[idx] = input;
+    })(bi);
+  }
+})();
+
+/* ----- word list ----- */
+(function buildWordList() {
+  var container = document.getElementById("word-list");
+  DATA.wordGroups.forEach(function (g) {
+    var group = document.createElement("div");
+    group.className = "wgroup";
+    var head = document.createElement("p");
+    head.className = "wl";
+    head.textContent = g.len + "文字";
+    group.appendChild(head);
+    g.words.forEach(function (w) {
+      var p = document.createElement("p");
+      p.className = "ww";
+      p.textContent = "・" + w;
+      group.appendChild(p);
+      wordEls.push({ w: w, el: p });
+    });
+    container.appendChild(group);
+  });
+})();
+
+/* ----- meta slots ----- */
+(function buildMeta() {
+  var slotsBox = document.getElementById("meta-slots");
+  metaCells.forEach(function (idx, i) {
+    var slot = document.createElement("div");
+    slot.className = "meta-slot";
+    var n = document.createElement("span");
+    n.className = "meta-slot-num";
+    n.textContent = String(i + 1);
+    var ch = document.createElement("span");
+    ch.className = "meta-slot-char";
+    ch.textContent = "　";
+    slot.appendChild(n);
+    slot.appendChild(ch);
+    slotsBox.appendChild(slot);
+    metaSlotChars.push(ch);
+  });
+})();
+
+/* ----- toolbar ----- */
+document.getElementById("current-clue").addEventListener("click", function () {
+  toggleDir();
+});
+document.getElementById("btn-check").addEventListener("click", function () {
+  var correct = 0, wrongN = 0, empty = 0;
+  wrongSet = {};
+  for (var i = 0; i < CELLS; i++) {
+    if (!isLetter[i]) continue;
+    var v = values[i];
+    if (v === "") empty++;
+    else if (v === solution[i]) { correct++; locked[i] = true; }
+    else { wrongN++; wrongSet[i] = true; }
+  }
+  repaint();
+  if (wrongN === 0 && empty === 0) {
+    setStatus("完成しました。");
+  } else {
+    setStatus("チェック：正解 " + correct + " ・ 不正解 " + wrongN + "（赤で表示） ・ 空き " + empty + "。正解のマスはロックされました。");
+  }
+});
+var confirmRow = document.getElementById("confirm-row");
+document.getElementById("btn-clear").addEventListener("click", function () {
+  confirmRow.style.display = "flex";
+});
+document.getElementById("btn-clear-no").addEventListener("click", function () {
+  confirmRow.style.display = "none";
+});
+document.getElementById("btn-clear-yes").addEventListener("click", function () {
+  for (var i = 0; i < CELLS; i++) { values[i] = ""; locked[i] = false; }
+  wrongSet = {};
+  editBuf = null;
+  confirmRow.style.display = "none";
+  repaint();
+  setStatus(fillMsg());
+});
+
+/* ----- meta answer (button click / Enter: immediate judgement) ----- */
+function checkMeta() {
+  if (metaSolved) return;
+  var input = document.getElementById("meta-input");
+  var v = extractKanaAll(input.value);
+  var wrongMsg = document.getElementById("meta-wrong");
+  if (!v) {
+    wrongMsg.textContent = "答えが入力されていません。カタカナで入力してください。";
+    wrongMsg.style.display = "block";
+    return;
+  }
+  if (v === DATA.answer) {
+    metaSolved = true;
+    wrongMsg.style.display = "none";
+    document.getElementById("meta-form").style.display = "none";
+    document.getElementById("meta-answer-echo").textContent = DATA.answer;
+    document.getElementById("meta-solved").style.display = "block";
+  } else {
+    wrongMsg.textContent = "ちがうみたい。もう一度どうぞ。";
+    wrongMsg.style.display = "block";
+  }
+}
+document.getElementById("btn-meta").addEventListener("click", checkMeta);
+document.getElementById("meta-input").addEventListener("keydown", function (e) {
+  if (e.key === "Enter" && !e.isComposing) {
+    e.preventDefault();
+    checkMeta();
+  }
+});
+document.getElementById("meta-input").addEventListener("input", function () {
+  document.getElementById("meta-wrong").style.display = "none";
+});
+
+/* ----- init ----- */
+if (slots[0] && slots[0].cells[0] != null) {
+  sel = { idx: slots[0].cells[0], dir: slots[0].d };
+}
+repaint();
+setStatus(fillMsg());
+</script>
+  </body>
+</html>

@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
     <meta name="color-scheme" content="light" />
     <link rel="icon" href="data:," />
-    <title>えおぱずN0.4 ☆☆☆</title>
+    <title>えおぱずNo.4 難易度：☆☆☆</title>
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="えおぱずN0.4 ☆☆☆" />
+    <meta property="og:title" content="えおぱずNo.4 難易度：☆☆☆" />
     <meta property="og:description" content="ナディアちゃん語録を使ったパズルです。該当するカギがあったら語録リストから選んでね。" />
     <meta property="og:image" content="https://sogetuk14.github.io/Eopuzz/Eopuzz4.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="えおぱずN0.4 ☆☆☆" />
+    <meta name="twitter:title" content="えおぱずNo.4 難易度：☆☆☆" />
     <meta name="twitter:description" content="ナディアちゃん語録を使ったパズルです。該当するカギがあったら語録リストから選んでね。" />
     <meta name="twitter:image" content="https://sogetuk14.github.io/Eopuzz/Eopuzz4.png" />
     <meta name="description" content="ナディアちゃん語録を使ったパズルです。該当するカギがあったら語録リストから選んでね。" />
@@ -245,6 +245,45 @@ body::before {
   align-self: center;
 }
 @media (max-width: 560px) { .current-clue .cc-hint { display: none; } }
+.word-bank {
+  margin-top: 14px;
+  border: 1.5px solid var(--line);
+  padding: 10px 12px 12px;
+}
+.word-bank-head {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.word-bank-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.word-bank-word {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1.5px solid var(--btn-ghost-border);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: 0;
+}
+.word-bank-word[aria-pressed="true"] {
+  background: var(--btn-bg);
+  color: var(--btn-ink);
+  border-color: var(--btn-bg);
+}
+.word-bank-word.placed {
+  color: var(--ink-soft);
+  text-decoration: line-through;
+  text-decoration-color: var(--mark);
+  text-decoration-thickness: 1.5px;
+}
+.word-bank-word.placed[aria-pressed="true"] { color: var(--btn-ink); }
+.word-bank-word:active { transform: translateY(1px); }
+.word-bank-msg { font-size: 13px; line-height: 1.5; margin: 8px 0 0; color: var(--ink); }
 .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .toolbar button {
   font-family: inherit;
@@ -447,19 +486,39 @@ body::before {
   font-size: 12px;
   letter-spacing: 0.02em;
 }
+.top-nav { margin: 0 0 10px; }
+.top-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 8px 16px;
+  border: 1.5px solid var(--btn-ghost-border);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", "Noto Sans JP", "Helvetica Neue", Arial, sans-serif;
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+.top-link:active { transform: translateY(1px); }
+.xw-footer .top-link { margin-bottom: 12px; }
 </style>
   </head>
   <body>
     <div class="xw">
       <div class="layout">
         <div class="board-col">
+
+          <div class="top-nav"><a class="top-link" href="https://sogetuk14.github.io/Eopuzz/">TOPに戻る</a></div>
           <header class="masthead">
             <div class="masthead-row">
               <span class="masthead-label">
                 <span class="diamond" aria-hidden="true"></span>
-                えおぱずN0.4
+                えおぱずNo.4
               </span>
-              <span class="masthead-date">☆☆☆</span>
+              <span class="masthead-date">難易度：☆☆☆</span>
             </div>
           </header>
 
@@ -473,6 +532,21 @@ body::before {
             <span class="cc-text" id="cc-text"></span>
             <span class="cc-hint">タップで切り替え</span>
           </button>
+
+          <section class="word-bank" aria-label="ナディアちゃん語録">
+            <h2 class="word-bank-head">ナディアちゃん語録</h2>
+            <div class="word-bank-list" id="bank-list">
+              <button type="button" class="word-bank-word" aria-pressed="false" aria-label="ラールラールリーチを選ぶ">ラールラールリーチ</button>
+              <button type="button" class="word-bank-word" aria-pressed="false" aria-label="ウルジュジェイルを選ぶ">ウルジュジェイル</button>
+              <button type="button" class="word-bank-word" aria-pressed="false" aria-label="レブナントツールを選ぶ">レブナントツール</button>
+              <button type="button" class="word-bank-word" aria-pressed="false" aria-label="オノジュツシを選ぶ">オノジュツシ</button>
+              <button type="button" class="word-bank-word" aria-pressed="false" aria-label="アラバシアウンカイを選ぶ">アラバシアウンカイ</button>
+              <button type="button" class="word-bank-word" aria-pressed="false" aria-label="ギバラニアを選ぶ">ギバラニア</button>
+              <button type="button" class="word-bank-word" aria-pressed="false" aria-label="レシアンを選ぶ">レシアン</button>
+              <button type="button" class="word-bank-word" aria-pressed="false" aria-label="ハウタケを選ぶ">ハウタケ</button>
+            </div>
+            <p class="word-bank-msg" id="bank-msg" role="status" style="display: none"></p>
+          </section>
 
           <div class="toolbar">
             <button type="button" class="primary" id="btn-check">チェック</button>
@@ -533,9 +607,9 @@ body::before {
               <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 3 ヨコ：石の家でタタルさんが待っている。"><span class="cl-num">3</span><span class="cl-text"><span class="cl-main">石の家でタタルさんが待っている。 </span><span class="cl-len">（8文字）</span></span></button></div>
               <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 4 ヨコ：首都はアラミゴ。とても広くて辺境地帯、山岳地帯、湖畔地帯に分かれてる。"><span class="cl-num">4</span><span class="cl-text"><span class="cl-main">首都はアラミゴ。とても広くて辺境地帯、山岳地帯、湖畔地帯に分かれてる。 </span><span class="cl-len">（5文字）</span></span></button></div>
               <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 5 ヨコ：オサード小大陸北部に広がる大草原。草原の覇権は合戦で決める。"><span class="cl-num">5</span><span class="cl-text"><span class="cl-main">オサード小大陸北部に広がる大草原。草原の覇権は合戦で決める。 </span><span class="cl-len">（7文字）</span></span></button></div>
-              <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 6 ヨコ：力が欲しい……。もっと力があれば……。多くの犠牲の元降ろされた蛮神。"><span class="cl-num">6</span><span class="cl-text"><span class="cl-main">力が欲しい……。もっと力があれば……。多くの犠牲の元降ろされた蛮神。 </span><span class="cl-len">（5文字）</span></span></button></div>
+              <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 6 ヨコ：力が欲しい……。もっと力があれば……。多くの犠牲の元降ろされた蛮神？"><span class="cl-num">6</span><span class="cl-text"><span class="cl-main">力が欲しい……。もっと力があれば……。多くの犠牲の元降ろされた蛮神？ </span><span class="cl-len">（5文字）</span></span></button></div>
               <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 9 ヨコ：鳥の部族が住まう浮島の多い場所。モーグリも言い間違えてた"><span class="cl-num">9</span><span class="cl-text"><span class="cl-main">鳥の部族が住まう浮島の多い場所。モーグリも言い間違えてた </span><span class="cl-len">（9文字）</span></span></button></div>
-              <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 11 ヨコ：リムサロミンサにあるギルド「は」といい、これといい、一発で読めないかも……。"><span class="cl-num">11</span><span class="cl-text"><span class="cl-main">リムサロミンサにあるギルド「は」といい、これといい、一発で読めないかも……。 </span><span class="cl-len">（6文字）</span></span></button></div>
+              <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 11 ヨコ：リムサロミンサにあるギルド。「は」といい、これといい、一発で読めないかも……。"><span class="cl-num">11</span><span class="cl-text"><span class="cl-main">リムサロミンサにあるギルド。「は」といい、これといい、一発で読めないかも……。 </span><span class="cl-len">（6文字）</span></span></button></div>
               </div>
             </section>
             <section aria-label="タテのカギ">
@@ -544,7 +618,7 @@ body::before {
               <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 1 タテ：メリディアヌム、アバニア、オリエンス……共通する言葉は？"><span class="cl-num">1</span><span class="cl-text"><span class="cl-main">メリディアヌム、アバニア、オリエンス……共通する言葉は？ </span><span class="cl-len">（5文字）</span></span></button></div>
               <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 2 タテ：壊神の加護の手が届く距離。手のひらでの組手が印象的。"><span class="cl-num">2</span><span class="cl-text"><span class="cl-main">壊神の加護の手が届く距離。手のひらでの組手が印象的。 </span><span class="cl-len">（9文字）</span></span></button></div>
               <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 3 タテ：アシエンと響きは似てるけど全く違うよ。小さい”っ”を忘れないで。"><span class="cl-num">3</span><span class="cl-text"><span class="cl-main">アシエンと響きは似てるけど全く違うよ。小さい”っ”を忘れないで。 </span><span class="cl-len">（4文字）</span></span></button></div>
-              <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 7 タテ：ここで戦績は装備やエモート、アイテムに交換。"><span class="cl-num">7</span><span class="cl-text"><span class="cl-main">ここで戦績は装備やエモート、アイテムに交換。 </span><span class="cl-len">（8文字）</span></span></button></div>
+              <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 7 タテ：ここで戦績を装備やエモート、アイテムに交換。"><span class="cl-num">7</span><span class="cl-text"><span class="cl-main">ここで戦績を装備やエモート、アイテムに交換。 </span><span class="cl-len">（8文字）</span></span></button></div>
               <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 8 タテ：黒衣森にある館。何でも妖異が棲みついてるという噂も……。"><span class="cl-num">8</span><span class="cl-text"><span class="cl-main">黒衣森にある館。何でも妖異が棲みついてるという噂も……。 </span><span class="cl-len">（4文字）</span></span></button></div>
               <div class="clue-row"><button type="button" class="clue-btn" aria-label="カギ 10 タテ：夢と美に酔わせる蛮神。慣れないコンテンツアクションに苦戦した人もいるとか。"><span class="cl-num">10</span><span class="cl-text"><span class="cl-main">夢と美に酔わせる蛮神。慣れないコンテンツアクションに苦戦した人もいるとか。 </span><span class="cl-len">（5文字）</span></span></button></div>
               </div>
@@ -555,12 +629,13 @@ body::before {
 
 
       <footer class="xw-footer">
+        <a class="top-link" href="https://sogetuk14.github.io/Eopuzz/">TOPに戻る</a>
         <div class="xw-copyright">(C) SQUARE ENIX CO., LTD. All Rights Reserved.</div>
       </footer>
     </div>
     <script>
 "use strict";
-var DATA = {"no":16,"title":"えおぱずN0.4","dateline":"☆☆☆","standfirst":"ナディアちゃん語録を使ったパズルです。該当するカギがあったら語録リストから選んでね。","cardImageUrl":"https://sogetuk14.github.io/Eopuzz/Eopuzz4.png","footerCopyright":"(C) SQUARE ENIX CO., LTD. All Rights Reserved.","words":[{"w":"アラバシアウンカイ","r":9,"c":6,"d":"A","clue":"鳥の部族が住まう浮島の多い場所。モーグリも言い間違えてた"},{"w":"ギバラニア","r":4,"c":0,"d":"A","clue":"首都はアラミゴ。とても広くて辺境地帯、山岳地帯、湖畔地帯に分かれてる。"},{"w":"ラールラールリーチ","r":1,"c":2,"d":"D","clue":"壊神の加護の手が届く距離。手のひらでの組手が印象的。"},{"w":"ラクシュミ","r":9,"c":7,"d":"D","clue":"夢と美に酔わせる蛮神。慣れないコンテンツアクションに苦戦した人もいるとか。"},{"w":"シンリュウ","r":7,"c":0,"d":"A","clue":"力が欲しい……。もっと力があれば……。多くの犠牲の元降ろされた蛮神。"},{"w":"レシアン","r":2,"c":4,"d":"D","clue":"アシエンと響きは似てるけど全く違うよ。小さい”っ”を忘れないで。"},{"w":"レブナントツール","r":2,"c":4,"d":"A","clue":"石の家でタタルさんが待っている。"},{"w":"オノジュツシ","r":11,"c":2,"d":"A","clue":"リムサロミンサにあるギルド「は」といい、これといい、一発で読めないかも……。"},{"w":"ウルジュジェイル","r":7,"c":4,"d":"D","clue":"ここで戦績は装備やエモート、アイテムに交換。"},{"w":"アジムステップ","r":4,"c":6,"d":"A","clue":"オサード小大陸北部に広がる大草原。草原の覇権は合戦で決める。"},{"w":"カストルム","r":0,"c":8,"d":"D","clue":"メリディアヌム、アバニア、オリエンス……共通する言葉は？"},{"w":"ハウタケ","r":8,"c":11,"d":"D","clue":"黒衣森にある館。何でも妖異が棲みついてるという噂も……。"}],"meta":{"answer":"ビスマルク","question":"リストニアルウンカイノバンシンハ？","cells":[[7,2],[4,9],[2,8],[4,3],[4,6],[3,2],[9,11],[7,1],[9,13],[13,4],[11,3],[4,1],[2,7],[3,4],[5,4],[8,11]]}};
+var DATA = {"no":16,"title":"えおぱずNo.4","dateline":"難易度：☆☆☆","standfirst":"ナディアちゃん語録を使ったパズルです。該当するカギがあったら語録リストから選んでね。","cardImageUrl":"https://sogetuk14.github.io/Eopuzz/Eopuzz4.png","footerCopyright":"(C) SQUARE ENIX CO., LTD. All Rights Reserved.","topUrl":"https://sogetuk14.github.io/Eopuzz/","words":[{"w":"アラバシアウンカイ","r":9,"c":6,"d":"A","clue":"鳥の部族が住まう浮島の多い場所。モーグリも言い間違えてた"},{"w":"ギバラニア","r":4,"c":0,"d":"A","clue":"首都はアラミゴ。とても広くて辺境地帯、山岳地帯、湖畔地帯に分かれてる。"},{"w":"ラールラールリーチ","r":1,"c":2,"d":"D","clue":"壊神の加護の手が届く距離。手のひらでの組手が印象的。"},{"w":"ラクシュミ","r":9,"c":7,"d":"D","clue":"夢と美に酔わせる蛮神。慣れないコンテンツアクションに苦戦した人もいるとか。"},{"w":"シンリュウ","r":7,"c":0,"d":"A","clue":"力が欲しい……。もっと力があれば……。多くの犠牲の元降ろされた蛮神？"},{"w":"レシアン","r":2,"c":4,"d":"D","clue":"アシエンと響きは似てるけど全く違うよ。小さい”っ”を忘れないで。"},{"w":"レブナントツール","r":2,"c":4,"d":"A","clue":"石の家でタタルさんが待っている。"},{"w":"オノジュツシ","r":11,"c":2,"d":"A","clue":"リムサロミンサにあるギルド。「は」といい、これといい、一発で読めないかも……。"},{"w":"ウルジュジェイル","r":7,"c":4,"d":"D","clue":"ここで戦績を装備やエモート、アイテムに交換。"},{"w":"アジムステップ","r":4,"c":6,"d":"A","clue":"オサード小大陸北部に広がる大草原。草原の覇権は合戦で決める。"},{"w":"カストルム","r":0,"c":8,"d":"D","clue":"メリディアヌム、アバニア、オリエンス……共通する言葉は？"},{"w":"ハウタケ","r":8,"c":11,"d":"D","clue":"黒衣森にある館。何でも妖異が棲みついてるという噂も……。"}],"bankWords":["ラールラールリーチ","ウルジュジェイル","レブナントツール","オノジュツシ","アラバシアウンカイ","ギバラニア","レシアン","ハウタケ"],"meta":{"answer":"ビスマルク","question":"リストニアルウンカイノバンシンハ？","cells":[[7,2],[4,9],[2,8],[4,3],[4,6],[3,2],[9,11],[7,1],[9,13],[13,4],[11,3],[4,1],[2,7],[3,4],[5,4],[8,11]]}};
 var SIZE = 15;
 var CELLS = SIZE * SIZE;
 
@@ -716,6 +791,7 @@ function updateChrome() {
   metaCells.forEach(function (idx, i) {
     if (metaSlotChars[i]) metaSlotChars[i].textContent = values[idx] || "　";
   });
+  paintBank();
   var pct = total > 0 ? Math.round((countFilled() / total) * 100) : 0;
   document.getElementById("progress-fill").style.width = pct + "%";
 }
@@ -952,6 +1028,7 @@ function handleKeyDown(e, idx) {
         downWasCurrent = !!sel && sel.idx === idx;
       });
       input.addEventListener("click", function () {
+        if (bankSelected) { handleBankCellTap(idx); return; }
         if (downWasCurrent) toggleDir();
       });
       cell.appendChild(input);
@@ -983,7 +1060,10 @@ function bindClueList(list, containerId) {
         if (t !== "") w.clue = t;
       }
       var btn = row.querySelector(".clue-btn");
-      if (btn) btn.addEventListener("click", function () { gotoWord(w); });
+      if (btn) btn.addEventListener("click", function () {
+        if (bankSelected) { placeBankWord(bankSelected, w); return; }
+        gotoWord(w);
+      });
       bound.push(row);
     });
     return bound;
@@ -1008,7 +1088,10 @@ function bindClueList(list, containerId) {
     text.appendChild(len);
     btn.appendChild(num);
     btn.appendChild(text);
-    btn.addEventListener("click", function () { gotoWord(w); });
+    btn.addEventListener("click", function () {
+      if (bankSelected) { placeBankWord(bankSelected, w); return; }
+      gotoWord(w);
+    });
     row.appendChild(btn);
     container.appendChild(row);
     rows.push(row);
@@ -1020,6 +1103,11 @@ downRows = bindClueList(down, "clues-down");
 
 /* ----- toolbar ----- */
 document.getElementById("current-clue").addEventListener("click", function () {
+  if (bankSelected) {
+    var bw = currentWord();
+    if (bw) placeBankWord(bankSelected, bw);
+    return;
+  }
   toggleDir();
 });
 document.getElementById("btn-check").addEventListener("click", function () {
@@ -1056,6 +1144,134 @@ document.getElementById("btn-clear-yes").addEventListener("click", function () {
   var first = across[0] || down[0];
   if (first && first.cells[0] != null) moveTo(first.cells[0], first.d);
 });
+
+/* ----- word bank （ナディアちゃん語録） -----
+   Only for puzzles with specified words (DATA.bankWords); the
+   section markup is emitted only then, and everything here stays
+   inert otherwise. Mirrors the app: tap a word to select it, then
+   tap a cell, a clue or the current-clue bar to place the whole
+   word at once. On a crossing cell the direction whose length
+   matches wins (current direction first). A word fully present in
+   some slot of the current board values is struck through; editing
+   the board so it no longer matches removes the strike. Locked
+   cells (locked by チェック) are never overwritten: a slot whose
+   locked letters disagree with the word is refused. */
+var bankWords = DATA.bankWords || [];
+var bankSelected = null;
+var bankBtns = [];
+function isBankWordPlaced(word) {
+  var all = across.concat(down);
+  for (var i = 0; i < all.length; i++) {
+    var xw = all[i];
+    if (xw.cells.length !== word.length) continue;
+    var ok = true;
+    for (var k = 0; k < xw.cells.length; k++) {
+      if (values[xw.cells[k]] !== word.charAt(k)) { ok = false; break; }
+    }
+    if (ok) return true;
+  }
+  return false;
+}
+function setBankMsg(text) {
+  var el = document.getElementById("bank-msg");
+  if (!el) return;
+  if (text) { el.textContent = text; el.style.display = "block"; }
+  else { el.textContent = ""; el.style.display = "none"; }
+}
+function paintBank() {
+  bankBtns.forEach(function (btn, i) {
+    var word = bankWords[i];
+    if (word == null) return;
+    var placed = isBankWordPlaced(word);
+    btn.className = "word-bank-word" + (placed ? " placed" : "");
+    var selected = bankSelected === word;
+    btn.setAttribute("aria-pressed", selected ? "true" : "false");
+    btn.setAttribute("aria-label", placed ? word + "（盤面に入っています）" : word + "を選ぶ");
+  });
+}
+function placeBankWord(word, target, focusIdx) {
+  if (word.length !== target.cells.length) {
+    setBankMsg("「" + word + "」は" + word.length + "文字で、" + target.num + " " + dirName(target.d) + "（" + target.cells.length + "文字）には入りません。");
+    return false;
+  }
+  for (var i = 0; i < target.cells.length; i++) {
+    var idx = target.cells[i];
+    if (locked[idx] && values[idx] !== word.charAt(i)) {
+      setBankMsg("ロック済みのマスと文字が合わないため入れられません。");
+      return false;
+    }
+  }
+  for (var j = 0; j < target.cells.length; j++) {
+    var ci = target.cells[j];
+    if (!locked[ci]) values[ci] = word.charAt(j);
+    if (wrongSet[ci]) delete wrongSet[ci];
+  }
+  bankSelected = null;
+  setBankMsg(null);
+  repaint();
+  if (isComplete()) {
+    setStatus("完成しました。");
+  } else if (countFilled() === total) {
+    setStatus("すべてのマスが埋まりましたが、間違っている文字があります。「チェック」で確認できます。");
+  } else {
+    setStatus(fillMsg());
+  }
+  var fIdx = focusIdx != null && target.cells.indexOf(focusIdx) >= 0 ? focusIdx : target.cells[0];
+  if (fIdx != null) moveTo(fIdx, target.d);
+  return true;
+}
+function handleBankCellTap(idx) {
+  var word = bankSelected;
+  if (!word) return;
+  var cw = cellWords[idx];
+  if (!cw) return;
+  var curDir = sel ? sel.dir : "A";
+  var pref = cw[curDir];
+  var other = cw[curDir === "A" ? "D" : "A"];
+  var target = null;
+  if (pref && pref.w.length === word.length) target = pref;
+  else if (other && other.w.length === word.length) target = other;
+  else target = pref || other;
+  if (!target) return;
+  placeBankWord(word, target, idx);
+}
+function toggleBankWord(word) {
+  if (bankSelected === word) {
+    bankSelected = null;
+    setBankMsg(null);
+  } else {
+    bankSelected = word;
+    setBankMsg(isBankWordPlaced(word)
+      ? "「" + word + "」はもう盤面に入っています。"
+      : "「" + word + "」を入れたいマスかカギをタップしてください。");
+  }
+  paintBank();
+}
+(function bindBank() {
+  if (bankWords.length === 0) return;
+  var container = document.getElementById("bank-list");
+  if (!container) return;
+  var existing = container.querySelectorAll(".word-bank-word");
+  if (existing.length === bankWords.length) {
+    bankWords.forEach(function (word, i) {
+      var btn = existing[i];
+      btn.addEventListener("click", function () { toggleBankWord(word); });
+      bankBtns.push(btn);
+    });
+    return;
+  }
+  bankWords.forEach(function (word) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "word-bank-word";
+    btn.textContent = word;
+    btn.setAttribute("aria-pressed", "false");
+    btn.setAttribute("aria-label", word + "を選ぶ");
+    btn.addEventListener("click", function () { toggleBankWord(word); });
+    container.appendChild(btn);
+    bankBtns.push(btn);
+  });
+})();
 
 /* ----- theme answer (meta) ----- */
 if (meta) {
